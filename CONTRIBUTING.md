@@ -89,7 +89,10 @@ Ask your assistant to read AGENTS.md, inspect the relevant source, make the chan
 and follow the validation rules above. Codex discovers AGENTS.md automatically;
 with other assistants explicitly point them to it if needed. You do not need to
 paste this repository's full documentation or the maintainer's conversation history.
-Humans still handle account login, publisher agreements and visual game verification.
+Review the resulting diff and verify the check results before opening a PR.
+Keep the change focused and explain any new dependency. Use [AGENTS.md](AGENTS.md)
+for the shared rules on reproduction, validation, and reporting. Humans handle
+account login, publisher agreements, and visual game verification.
 
 Custom icon generation is deferred and disabled in source setup/run and CI.
 The code is retained; see [Deferred icons](docs/deferred-icons.md).
