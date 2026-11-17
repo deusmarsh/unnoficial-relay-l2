@@ -1,45 +1,41 @@
 # Lineage II macOS Relay
 
-An unofficial, experimental macOS relay and Wine setup for the official EU launcher
-and Windows game. Built with AI-assisted development and local testing. Not affiliated
-with Innova or NCSoft. This repository is open for component changes and experiments;
-a packaged app or DMG is not required for development.
+[![Source checks](https://github.com/deusmarsh/unnoficial-relay-l2/actions/workflows/check.yml/badge.svg?branch=main)](https://github.com/deusmarsh/unnoficial-relay-l2/actions/workflows/check.yml)
 
-## Current status
+An unofficial source alpha for running the Lineage II EU launcher and Windows
+game on Apple Silicon Macs through Wine. Developed with AI assistance and local
+testing. Independent of Innova and NCSoft.
 
-On the maintainer's tested setup, the official launcher starts, login and game download
-work, and the game starts. Server selection and character creation work according to
-the maintainer's latest report. Entry into the world and sustained gameplay have not
-been established. Stuttering and incorrect textures/model colors remain under investigation.
-Earlier tests also observed missing text and a blank dialog; check your own scenario.
-A complete fresh installation on another Mac still needs verification.
+## Quick start
 
-## Developer quick start
+On an Apple Silicon Mac with macOS 13 or later, clone or download this repository.
+Allow several GB for setup and roughly 41 GB for the game. Setup prompts for
+Apple's Command Line Tools and Rosetta if needed.
 
-Use an Apple Silicon Mac with macOS 13+, internet, several GB for the runtime and
-roughly 41 GB for the game. Apple's Command Line Tools and Rosetta are required;
-source setup offers installation prompts if missing.
+1. Open **Develop.command** and choose **Set up / resume**, or run `./dev setup`.
+2. Follow the setup wizard and complete the official publisher's installer.
+3. Choose **Run changed sources** or run `./dev run`. Sign in and download the
+   game in the official launcher.
 
-Fork this repository, clone your fork, then run from its directory:
+See [Installation](INSTALL.md) for setup details and [Contributing](CONTRIBUTING.md)
+for editing, rebuilding, and submitting changes.
 
-```sh
-./dev setup
-# Finish the graphical setup and official installer, then:
-./dev run
-```
+## Alpha status
 
-Or double-click **Develop.command** for the same commands in a menu. Setup obtains
-pinned dependencies, builds the Wine patches and creates an isolated local prefix.
-You complete publisher agreements, login and the game installation yourself.
-Do not run `run` until the graphical setup has finished.
+| Scenario | Status |
+| --- | --- |
+| Launcher startup, login, and game download | Worked on the maintainer's Mac |
+| Game startup, server selection, and character creation | Worked on the maintainer's Mac |
+| Entering the game world and sustained play | Still to be verified |
+| Fresh setup through game launch on another Mac | Still to be verified |
+| Rendering and performance | Stuttering and incorrect textures or model colors remain. Earlier runs also showed missing text and a blank dialog. |
 
-After editing sources, `./dev run` rebuilds changed native components automatically.
-For checks without installing Wine or the game, use `./dev check` (or `python3 dev.py check`
-on another operating system with Python 3.9+).
+The GitHub checks cover source tests and the macOS interface build.
+See [experiment notes](docs/experiments.md) for the gameplay baseline.
 
-See [Contributing](CONTRIBUTING.md) for the complete fork → edit → check → pull request
-process, runtime rebuilds and manual validation. AI assistants should start with
-[AGENTS.md](AGENTS.md). See the [architecture map](docs/architecture.md) to find a component.
+![Lineage II game client at its login screen](docs/alpha-login.jpg)
+
+*Game client during a local alpha run. Screenshot includes artwork from the official game.*
 
 ## How it works
 
@@ -59,9 +55,8 @@ use the local debug port 8088; do not expose it to the network.
 - Investigate alternative rendering paths with before/after evidence.
 
 Record useful results in [Experiments](docs/experiments.md). See [Technical notes](TECHNICAL.md)
-for dependencies and build details, and [Installation](INSTALL.md) for the optional
-standalone app workflow. Standalone distribution is a separate experimental path;
-Developer ID signing and notarization are incomplete.
+for dependencies and build details. Start with [AGENTS.md](AGENTS.md) when working
+with an AI assistant.
 
 ## License and local data
 

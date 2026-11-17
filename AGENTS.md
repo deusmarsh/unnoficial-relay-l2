@@ -27,6 +27,17 @@ need the maintainer's chat history. Instructions and commands are shared with hu
 | Developer workflow | dev.py, test_dev.py, package_source.py | CONTRIBUTING.md |
 | Standalone distribution only | build_bundle.py, install_bundle.py | INSTALL.md, THIRD_PARTY_NOTICES.md |
 
+## Working on a change
+
+- Start with the reported behavior and the expected result. Inspect the relevant
+  code and reproduce the issue when possible. Mark unverified causes as hypotheses.
+- Keep the diff focused on the issue. Explain any new dependency and update the
+  instructions when commands or setup behavior change.
+- For a bug fix, add a regression check when it can capture the reported failure.
+  For rendering or performance work, record comparable before-and-after evidence.
+- Report what you ran and what remains unverified. Ask a person to handle publisher
+  agreements, account sign-in, and gameplay checks.
+
 ## Boundaries and validation
 
 - Preserve separation: relay frames are launcher UI; the game renders separately

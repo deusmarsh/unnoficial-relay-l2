@@ -6,7 +6,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parent
 FILES = (
     'dev', 'dev.py', 'Develop.command', 'test_dev.py', 'AGENTS.md', 'CONTRIBUTING.md',
-    'docs/architecture.md', 'docs/experiments.md', 'docs/deferred-icons.md',
+    'docs/alpha-login.jpg', 'docs/architecture.md', 'docs/experiments.md', 'docs/deferred-icons.md',
     '.github/pull_request_template.md', '.github/ISSUE_TEMPLATE/bug_report.md', '.github/workflows/check.yml',
     'test_bundle.py', 'AppPaths.swift', 'app_paths.py', 'install_bundle.py', 'build_bundle.py', 'extract_python_licenses.py',
     'PROCESSES.md', 'TECHNICAL.md', 'SetupWizard.swift', 'bootstrap_setup.py', 'INSTALL.md', 'Install.command', 'install.py', 'dependencies.json', 'prepare_net3132.py',
