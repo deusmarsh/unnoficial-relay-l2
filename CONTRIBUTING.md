@@ -6,28 +6,10 @@ replacements are welcome with a clear explanation of the resulting behavior.
 
 ## First run on a Mac
 
-Requirements: Apple Silicon, macOS 13+, internet, several GB for runtime preparation
-and roughly 41 GB more for the game. The source path uses Apple's Command Line Tools
-and Rosetta. Setup offers their installation prompts if missing; finish those yourself.
-
-1. Fork this repository on GitHub and clone your fork. Open its folder in Terminal
-   or in your coding assistant. Run all commands below from that folder.
-2. Run `./dev setup`, or double-click **Develop.command** and choose **Set up / resume**.
-3. Follow the setup window. It downloads checksum-pinned dependencies, builds the
-   Wine patches and prepares an isolated prefix in `.local/`. Repeating setup reuses
-   completed preparation; changed patches require a new directory (see below).
-4. Review the official publisher's installer and complete it yourself. Return to
-   setup for activation. Setup backs up the previous local config and keeps the old prefix.
-5. Run `./dev run`. Sign in and install the game in the official launcher.
-
-No existing game installation or account profile is included in this repository.
-Do not manually fill runtime paths for the normal setup path. `config.example.json`
-is for advanced use; the installer writes `config.local.json` automatically.
-
-For preparation without opening the publisher installer or activating a config,
-use `./dev setup --prepare-only`. This does not make `./dev run` ready by itself.
-The setup command opens a graphical wizard and returns before that wizard completes;
-continue there, and wait for its completion before launching another command.
+Fork the repository and clone your fork. Run commands from the checkout folder.
+Follow the [quick start](README.md#quick-start) and consult the [installation guide](INSTALL.md#source-alpha)
+for setup details. The normal workflow writes the local configuration for you.
+`config.example.json` is available for advanced setups.
 
 ## Edit, run, check
 

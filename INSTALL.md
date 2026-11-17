@@ -1,10 +1,21 @@
 # Installation
 
-For development from this repository use [Contributing](CONTRIBUTING.md) and
-`./dev setup`. The app-preview instructions below describe the separate optional
-standalone distribution; a disk image is not required for contributions.
+## Source alpha
 
-## App preview
+Follow the [quick start](README.md#quick-start) to set up and launch the alpha.
+Setup downloads pinned dependencies, builds the Wine patches, and creates an
+isolated environment in `.local/`. It writes `config.local.json` automatically.
+The wizard continues in its own window after the command returns. Finish the
+publisher's installer and return to the wizard to activate the environment.
+
+Repeating setup reuses completed preparation. For a preparation run that stops
+before the official installer and activation, use `./dev setup --prepare-only`.
+See [Contributing](CONTRIBUTING.md) for rebuilding after changes to Wine patches.
+
+## Standalone app preview
+
+These instructions apply if you already have the experimental disk image.
+The source alpha uses the setup steps above.
 
 1. Open **Lineage II Launcher.dmg**.
 2. Drag **Lineage II Launcher.app** to **Applications**.
@@ -40,9 +51,4 @@ Closing the Mac app leaves the official launcher/game running. Quit them before 
 
 The original environment reached server selection and character-creation screens. A separate source-based clean runtime build passed Windows, .NET-host and mutex checks and opened the publisher's agreement window. The standalone bundle is tested separately from a relocated copy with a new data directory, no original cache and access to the development workspace denied. The manual handoff is the first agreement window: no publisher terms or account login are accepted by automation.
 
-The maintainer now reports successful character creation on the original setup.
-World entry and a full fresh game installation on another Mac remain unverified.
-
-## Source build
-
-The source archive is for development. Its Install.command builds the setup app and does need Apple's developer tools. See [Technical notes](TECHNICAL.md). This requirement does not apply to the prebuilt app.
+See the [alpha status](README.md#alpha-status) for the current gameplay baseline.
