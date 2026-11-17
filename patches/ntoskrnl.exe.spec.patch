@@ -1,0 +1,13 @@
+--- a/dlls/ntoskrnl.exe/ntoskrnl.exe.spec
++++ b/dlls/ntoskrnl.exe/ntoskrnl.exe.spec
+@@ -2,6 +2,10 @@
+ @ stdcall EtwUnregister(int64)
+ @ stdcall -arch=!i386 ExAcquireFastMutex(ptr)
+ @ stdcall -fastcall ExAcquireFastMutexUnsafe(ptr)
++@ stdcall -fastcall KeAcquireGuardedMutexUnsafe(ptr)
++@ stdcall -fastcall KeAcquireGuardedMutex(ptr)
++@ stdcall -fastcall KeReleaseGuardedMutexUnsafe(ptr)
++@ stdcall -fastcall KeReleaseGuardedMutex(ptr)
+ @ stub ExAcquireRundownProtection
+ @ stub ExAcquireRundownProtectionEx
+ @ stub ExInitializeRundownProtection

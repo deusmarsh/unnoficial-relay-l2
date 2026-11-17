@@ -1,0 +1,46 @@
+--- a/dlls/winemac.drv/macdrv_main.c
++++ b/dlls/winemac.drv/macdrv_main.c
+@@ -59,6 +59,7 @@
+ int gl_surface_mode = GL_SURFACE_IN_FRONT_OPAQUE;
+ int retina_enabled = FALSE;
+ int enable_app_nap = FALSE;
++int lineage_background_app = FALSE;
+ 
+ UINT64 app_icon_callback = 0;
+ UINT64 app_quit_request_callback = 0;
+@@ -372,6 +373,9 @@
+         else
+             gl_surface_mode = GL_SURFACE_IN_FRONT_OPAQUE;
+     }
++
++    if (!get_config_key(hkey, appkey, "LineageBackgroundApp", buffer, sizeof(buffer)))
++        lineage_background_app = IS_OPTION_TRUE(buffer[0]);
+ 
+     if (!get_config_key(hkey, appkey, "EnableAppNap", buffer, sizeof(buffer)))
+         enable_app_nap = IS_OPTION_TRUE(buffer[0]);
+--- a/dlls/winemac.drv/macdrv_cocoa.h
++++ b/dlls/winemac.drv/macdrv_cocoa.h
+@@ -158,6 +158,7 @@
+ extern int retina_enabled;  /* Whether Retina mode is enabled via registry setting. */
+ extern int retina_on;       /* Whether Retina mode is currently active (enabled and display is in default mode). */
+ extern int enable_app_nap;
++extern int lineage_background_app;
+ 
+ static inline CGRect cgrect_mac_from_win(CGRect rect)
+ {
+--- a/dlls/winemac.drv/cocoa_app.m
++++ b/dlls/winemac.drv/cocoa_app.m
+@@ -243,6 +243,13 @@
+ 
+     - (void) transformProcessToForeground:(BOOL)activateIfTransformed
+     {
++        /* The native relay owns the user-facing launcher and runtime console.
++           Opted-in launcher/shell processes must not create dead Dock entries. */
++        if (lineage_background_app)
++        {
++            [NSApp setActivationPolicy:NSApplicationActivationPolicyAccessory];
++            return;
++        }
+         if ([NSApp activationPolicy] != NSApplicationActivationPolicyRegular)
+         {
+             NSMenu* mainMenu;

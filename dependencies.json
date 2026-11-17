@@ -1,0 +1,57 @@
+{
+  "engine": {
+    "url": "https://github.com/Sikarugir-App/Engines/releases/download/v1.0/WS12WineSikarugir10.0_8.tar.xz",
+    "file": "WS12WineSikarugir10.0_8.tar.xz",
+    "sha256": "2a6bcf2a3bf13cddf825599b6bc1e3659cbf71e1282c6d77141a92f6ac8d4c68"
+  },
+  "support": {
+    "url": "https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.21/wine-devel-11.21-osx64.tar.xz",
+    "file": "wine-devel-11.21-osx64.tar.xz",
+    "sha256": "9909b486657e10ab66c7279371ae1f990345b596b3b1b3a0cf21f28af24fa0ce"
+  },
+  "compiler": {
+    "url": "https://github.com/mstorsjo/llvm-mingw/releases/download/20261104/llvm-mingw-20261104-ucrt-macos-universal.tar.xz",
+    "file": "llvm-mingw-20261104-ucrt-macos-universal.tar.xz",
+    "sha256": "66cbd5178c4a71b0d473e68ede172f8eb7d15d023e67f39201d0a69e21f6bf3c"
+  },
+  "wine_source": {
+    "url": "https://github.com/wine-mirror/wine/archive/refs/tags/wine-10.0.tar.gz",
+    "file": "wine-10.0-source.tar.gz",
+    "sha256": "b3edf134a5698d55bd210f11c3ae833c943abcece75810f6aa8cbd7a9f293ff7"
+  },
+  "bison": {
+    "url": "https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz",
+    "file": "bison-3.8.2.tar.xz",
+    "sha256": "9bba0214ccf7f1079c5d59210045227bcf619519840ebfa80cd3849cff5a5bf2"
+  },
+  "dotnet": {
+    "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/3.1.32/dotnet-runtime-3.1.32-win-x86.zip",
+    "file": "dotnet-runtime-3.1.32-win-x86.zip",
+    "sha512": "3cddda423359bc178dd5df8695a0b98c69c39ce846d53c316eda1436837147ba863ab01a606c72c9fae47fb82890a69a3c1916b1c4fdc1590c7113026617cf09"
+  },
+  "installer": {
+    "url": "https://cdn.4game.com/new4game/global/web-installer/LineageII-eu-Setup.exe",
+    "file": "LineageII-eu-Setup.exe",
+    "sha256": "a478274ade8465c5da55b63dec15fb9f628d6b622615c2775d42a8f354d78cd0"
+  },
+  "python": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.12.16%2B20261110-aarch64-apple-darwin-install_only_stripped.tar.gz",
+    "file": "cpython-3.12.16-aarch64-apple-darwin-install_only_stripped.tar.gz",
+    "sha256": "2f11b8aa3726bdbd87dd9eb76568412faddf4f47e26913fa45d6a2e424972acd"
+  },
+  "python_full": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.12.16%2B20261110-aarch64-apple-darwin-pgo%2Blto-full.tar.zst",
+    "file": "cpython-3.12.16-aarch64-apple-darwin-full.tar.zst",
+    "sha256": "4da072af9dbbc2557d3aabf51db553a19694f6ac61b5b7169749e4acfa5a052d"
+  },
+  "rcodesign": {
+    "url": "https://github.com/indygreg/apple-platform-rs/releases/download/apple-codesign/0.29.0/apple-codesign-0.29.0-aarch64-apple-darwin.tar.gz",
+    "file": "apple-codesign-0.29.0-aarch64-apple-darwin.tar.gz",
+    "sha256": "d1a532150adaf90048260d76359261aa716abafc45c53c5dc18845029184334a"
+  },
+  "rcodesign_source": {
+    "url": "https://github.com/indygreg/apple-platform-rs/archive/refs/tags/apple-codesign/0.29.0.tar.gz",
+    "file": "apple-platform-rs-0.29.0-source.tar.gz",
+    "sha256": "e92e27c2d0738523b5f0bfc2da5dbab33601568cfeff3e1d40eadd0ffb8e5a98"
+  }
+}

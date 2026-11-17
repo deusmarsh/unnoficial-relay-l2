@@ -1,0 +1,4 @@
+#!/bin/sh
+# Keep the interpreter consistent with the native source app.
+TASK_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec /usr/bin/python3 "$TASK_ROOT/dev.py" "$@"

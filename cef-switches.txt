@@ -1,0 +1,4 @@
+disable-gpu
+disable-gpu-compositing
+disable-accelerated-video-decode
+force-device-scale-factor 1

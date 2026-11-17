@@ -1,0 +1,8 @@
+{
+  "prefix": "/path/to/your/wine-prefix",
+  "wine": "/path/to/wine",
+  "wineserver": "/path/to/wineserver",
+  "library_paths": [
+    "/path/to/runtime/libraries"
+  ]
+}

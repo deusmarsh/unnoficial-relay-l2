@@ -1,0 +1,14 @@
+config.local.json
+*.app/
+.build/
+logs/
+__pycache__/
+.DS_Store
+*.log
+
+.local/
+
+dist/
+
+.local-*/
+*.pyc
