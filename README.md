@@ -6,6 +6,8 @@ An unofficial source alpha for running the Lineage II EU launcher and Windows
 game on Apple Silicon Macs through Wine. Developed with AI assistance and local
 testing. Independent of Innova and NCSoft.
 
+[Download the alpha demo (.mov)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/alpha-demo/demo.mov)
+
 ## Quick start
 
 On an Apple Silicon Mac with macOS 13 or later, clone or download this repository.
