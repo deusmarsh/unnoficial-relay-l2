@@ -26,9 +26,10 @@ class BundleChecks(unittest.TestCase):
             config=data/'config.local.json'
             config.write_text(json.dumps(dict(prefix=str(prefix),wine=str(wine),wineserver=str(server),library_paths=[])))
             switch=data/'App With Spaces.txt';switch.write_text('disable-gpu\n')
-            with patch.object(runner,'CONFIG',config),patch.object(runner,'DATA',data),patch.object(runner,'HELPERS',data/'absent-helpers'),patch.object(sys,'argv',['run_stock_launcher.py','--debug','--finish-setup','--switch-file',str(switch)]),patch.object(runner.subprocess,'run',return_value=SimpleNamespace(returncode=128)) as stop,patch.object(runner.subprocess,'Popen',return_value=SimpleNamespace(pid=123)) as launch,contextlib.redirect_stdout(io.StringIO()):
+            with patch.object(runner,'prepare_game_fonts') as fonts,patch.object(runner,'CONFIG',config),patch.object(runner,'DATA',data),patch.object(runner,'HELPERS',data/'absent-helpers'),patch.object(sys,'argv',['run_stock_launcher.py','--debug','--finish-setup','--switch-file',str(switch)]),patch.object(runner.subprocess,'run',return_value=SimpleNamespace(returncode=128)) as stop,patch.object(runner.subprocess,'Popen',return_value=SimpleNamespace(pid=123)) as launch,contextlib.redirect_stdout(io.StringIO()):
                 runner.main()
             self.assertEqual([call.args[0] for call in stop.call_args_list],[[str(wine),'taskkill','/F','/IM','winedbg.exe'],[str(wine),'taskkill','/F','/IM','Inn.games.exe'],[str(wine),'taskkill','/F','/IM','Launcher.exe'],[str(wine),'taskkill','/F','/IM','explorer.exe']])
+            fonts.assert_called_once_with(prefix.resolve())
             self.assertIn('/d',launch.call_args.args[0])
             self.assertEqual(launch.call_args.args[0][-2:],['/sw',r'C:\lineage-relay\cef-switches.txt'])
             self.assertEqual((prefix/'drive_c/lineage-relay/cef-switches.txt').read_text(),'disable-gpu\n')

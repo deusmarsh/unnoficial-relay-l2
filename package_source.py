@@ -10,7 +10,7 @@ FILES = (
     '.github/pull_request_template.md', '.github/ISSUE_TEMPLATE/bug_report.md', '.github/workflows/check.yml',
     'test_bundle.py', 'AppPaths.swift', 'app_paths.py', 'install_bundle.py', 'build_bundle.py', 'extract_python_licenses.py',
     'PROCESSES.md', 'TECHNICAL.md', 'SetupWizard.swift', 'bootstrap_setup.py', 'INSTALL.md', 'Install.command', 'install.py', 'dependencies.json', 'prepare_net3132.py',
-    'GuardedMutexProbe.c', 'test_installer.py',
+    'GuardedMutexProbe.c', 'test_installer.py', 'prepare_game_fonts.py', 'test_game_fonts.py',
     'patches/winemac-background-app.patch', 'patches/sync.c.patch', 'patches/ntoskrnl.exe.spec.patch', 'patches/README.md',
     'licenses/WINE-LICENSE', 'licenses/WINE-COPYING.LIB',
     '.gitignore', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md',

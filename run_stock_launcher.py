@@ -8,6 +8,7 @@ from pathlib import Path
 from app_paths import DATA, CONFIG, HELPERS
 import subprocess
 import shutil
+from prepare_game_fonts import prepare_game_fonts
 
 
 def main():
@@ -44,6 +45,7 @@ def main():
     if args.check_layout:
         print(json.dumps({'command': command, 'cwd': str(install), 'prefix': str(prefix)}, indent=2))
         return
+    prepare_game_fonts(prefix)
     if switch:
         destination = prefix / 'drive_c/lineage-relay/cef-switches.txt'
         destination.parent.mkdir(exist_ok=True)

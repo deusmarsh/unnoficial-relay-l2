@@ -37,6 +37,22 @@ The pinned Wine engine and support packages are downloaded from their upstream p
 
 Private data is stored in `~/Library/Application Support/Lineage II for macOS`. Preparation uses several GB. The game needs roughly 41 GB separately. Completed downloads are reused after interruption; changed upstream files stop at a hash check.
 
+## Game UI fonts
+
+Setup and launcher startup copy the local macOS supplemental `Arial.ttf` and
+`Tahoma.ttf` into the configured Wine prefix as `C:\windows\Fonts\Arial.ttf`
+and `C:\windows\Fonts\tahoma.ttf`. The game opens these files directly;
+working Wine/GDI font substitution alone does not supply them. Existing files
+are kept, including names with different capitalization. Updating the source
+and running `./dev run` applies this to an existing configured installation;
+restart an already-running game to load the fonts.
+
+No font binaries are shipped or downloaded by this project. If either local
+supplemental font is absent, setup/startup reports the missing name and continues;
+missing game text may persist. Check the supplemental fonts on that Mac and
+restart through this launcher once they are available. See the
+[confirmed investigation](docs/experiments.md#missing-native-ui-text--18-november-2026).
+
 ## After setup
 
 Open the same app from Applications. It starts the official launcher and displays its page. Use Reload if the page gets stuck. If the launcher does not connect, Open Log shows its startup log. Windowed game preferences are applied once before initial launcher input after the game preference file appears.

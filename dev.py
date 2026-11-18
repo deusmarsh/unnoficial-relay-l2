@@ -128,7 +128,7 @@ def check():
     env = environment()
     env.pop('LINEAGE_TEST_APP', None)
     subprocess.run([sys.executable, '-B', '-m', 'unittest', '-v',
-                    'test_installer', 'test_bundle', 'test_dev'],
+                    'test_installer', 'test_bundle', 'test_dev', 'test_game_fonts'],
                    cwd=ROOT, env=env, check=True)
     print('Portable checks passed. This does not establish game rendering or gameplay.')
 

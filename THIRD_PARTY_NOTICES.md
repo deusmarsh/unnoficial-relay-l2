@@ -35,3 +35,9 @@ The shipped Wine modules are accompanied by its Wine 10 source archive, our patc
 Python distribution: https://github.com/astral-sh/python-build-standalone/releases/tag/20261110 . Its licenses apply to Python and dependencies, not to game content. Local ad-hoc signing changes signatures but does not change those license grants.
 
 The standalone app includes apple-codesign (rcodesign) 0.29.0 for local ad-hoc signing of the downloaded runtime, avoiding a dependency on Xcode's codesign_allocate. Its bundled COPYING notice and the corresponding apple-platform-rs source archive are included in Resources/Licenses and Resources/Source. This tool does not provide a Developer ID identity or notarize the app.
+
+Local game fonts: setup/startup uses Arial and Tahoma already present in the
+Mac's system supplemental font directory, copying absent files only into the
+configured local Wine prefix. This repository and its source/app packages do not
+include those font binaries or grant a license to redistribute them. Their
+existing license terms apply.
