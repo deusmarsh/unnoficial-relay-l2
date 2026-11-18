@@ -58,8 +58,9 @@ def main():
         previous=out/('Previous Build '+str(time.time_ns())+'.app');app.rename(previous)
     shutil.copytree(ROOT/'4gameRelay.app',app,symlinks=True)
     resources=app/'Contents/Resources';code=resources/'app';code.mkdir()
-    code_files=['install_bundle.py','install.py','app_paths.py','dependencies.json','prepare_net3132.py','run_stock_launcher.py','configure_game_window.py','launcher_window.py','cef-switches.txt']
+    code_files=['install_bundle.py','install.py','app_paths.py','dependencies.json','prepare_net3132.py','prepare_updater_ca.py','run_stock_launcher.py','configure_game_window.py','launcher_window.py','cef-switches.txt']
     for name in code_files:shutil.copyfile(ROOT/name,code/name)
+    shutil.copytree(ROOT/'certificates',code/'certificates')
     py_stage=ROOT/'.build/python-install'
     setup.unpack(python_archive,py_stage)
     shutil.copytree(py_stage/'python',resources/'Python',symlinks=True)
