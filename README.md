@@ -28,16 +28,17 @@ for editing, rebuilding, and submitting changes.
 | --- | --- |
 | Launcher startup, login, and game download | Worked on the maintainer's Mac |
 | Game startup, server selection, and character creation | Worked on the maintainer's Mac |
-| Entering the game world and sustained play | Still to be verified |
+| Entering the game world | Confirmed on the maintainer’s Mac. Gludio loaded after character selection. |
+| Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
 | Rendering and performance | Stuttering and incorrect textures or model colors remain. Earlier runs also showed missing text and a blank dialog. |
 
 The GitHub checks cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
 
-![Lineage II game client at its login screen](docs/alpha-login.jpg)
+![Gludio after entering the game world, with the minimap and a blank dialog visible](docs/gludio-world-entry.jpg)
 
-*Game client during a local alpha run. Screenshot includes artwork from the official game.*
+*Gludio during a local alpha run. The city and HUD loaded, and a blank dialog remained on screen. Screenshot includes artwork from the official game.*
 
 ## How it works
 
