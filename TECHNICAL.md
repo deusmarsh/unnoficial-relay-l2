@@ -8,8 +8,10 @@ The lower-level commands below are for targeted investigation.
 
 - `SetupWizard.swift`: native setup window; runs the Python installer and turns its prompts into buttons.
 - `install.py`: downloads, hash checks, local builds, isolated prefix, smoke tests and activation.
-- `NativeFrameRelay.swift`: launcher windows, frame display, keyboard/pointer forwarding and Reload.
-- `run_stock_launcher.py`: official runner under the configured Wine host.
+- `NativeFrameRelay.swift`: direct launcher handoff and the optional screenshot relay.
+- `run_stock_launcher.py`: official runner under the configured Wine host, display selection and safe reuse.
+- `launcher_startup.py`, `launcher_connection.py`: local-only, bounded splash recovery.
+- `cef-direct-window.txt`: tested direct-window Chromium switches, including `in-process-gpu`.
 - `dependencies.json`: pinned URLs and hashes.
 - `patches/`: Wine 10 guarded-mutex and background-launcher patches, reference sources and LGPL terms.
 
@@ -40,13 +42,40 @@ Requires Xcode Command Line Tools and Python 3. The optional WPF window helper n
 
 The tested environment uses Sikarugir Wine 10 with a locally built Wine kernel synchronization backport and support libraries from the pinned Wine development package. The official WPF installer is extracted and prepared with Microsoft .NET Core 3.1.32 while preserving its WindowsDesktop assemblies. This is a legacy, experimental runtime combination.
 
-The official runner is launched with its diagnostic endpoint on localhost:8088. The relay displays page frames and forwards input through that endpoint. It handles multiple launcher pages, maps input using viewport dimensions, caps WebSocket messages at 32 MiB and reconnects after transport errors.
+The default display is the official launcher's direct Wine window. Its Chromium
+switches disable GPU rendering/compositing and accelerated video decode, fix scale
+at 1, and add `in-process-gpu`. This combination restored the actual launcher
+surface in the local test. `Launcher.exe` sets the per-application
+`LineageBackgroundApp` value to `N`, allowing normal foreground window controls.
+Other launcher helpers retain their background settings. Wine binaries and patches
+are unchanged by this launcher improvement.
 
-The game renders separately through Direct3D 9 → WineD3D → OpenGL. It is not streamed through the relay. DXVK/Metal rendering has not been deployed or verified.
+The official runner enables its diagnostic endpoint on localhost:8088. Direct mode
+uses finite startup checks only, without capturing screenshots or forwarding input.
+If `/splash` stays loaded after the real `LAUNCHER` bridge is available, startup
+reloads it at most once after a grace period. Checks end after approximately 90
+seconds plus bounded connection timeouts; the official window stays open if loading
+has not finished. Reopening an existing direct launcher neither reloads its page nor
+restarts its updater or game. Concurrent startup requests are serialized.
 
-The original launcher's WPF surface may remain black under Wine while Chromium still supplies frames through the diagnostic endpoint. During connection, the relay adds a standard caption, window controls and a keep-open title to large unowned WPF windows belonging to Launcher.exe. After receiving its first frame, it hides those windows and repeats the check while connected in case WPF resurfaces. Game and Frost processes are not targeted. Closing the original launcher may also stop the game; hiding its surface preserves the process. Runtime Log is an independent native console with bounded live log output; closing it never stops Wine.
+The game still renders separately through Direct3D 9 → WineD3D → OpenGL. No Vulkan,
+DXVK, graphics DLL override or game preference change is part of this improvement.
+It does not fix the game's rendering errors or stuttering.
 
-The official installer opens a launcher instance without the diagnostic endpoint. On the first Open Launcher handoff, the app stops only Inn.games.exe and Launcher.exe in its own prefix (without killing child processes or wineserver), then starts the installed runner with the relay flags. Subsequent launches do not perform this setup handoff. The publisher-created desktop shortcut launches the original Windows UI directly and should not be used for the Mac interface.
+After closing the official launcher, `./dev run --relay` selects the legacy native
+Mac screenshot display. That mode retains frame/input handling, the hide timer and
+Runtime Log. The packaged equivalent is `open -a "Lineage II Launcher" --args --relay`.
+The relay hides the original WPF surface; direct mode does not start any relay
+controller or its polling/hide timer. Closing the direct official window may stop
+the game. Closing a relay window does not stop Wine.
+
+On the first Open Launcher handoff, startup stops only launcher executables in the
+configured prefix, then restarts with the selected display flags. It refuses to do
+so while `L2.exe` or `4updater.exe` is running. It never kills wineserver, explorer,
+process trees or the game. A normal reopen reuses a matching display mode and asks
+the user to close an incompatible one. A busy port in another environment is not
+used for startup recovery. Publisher desktop shortcuts bypass these settings;
+open the Mac launcher instead.
 
 To restore windows hidden or minimized by the helper:
 
@@ -56,7 +85,7 @@ python3 launcher_window.py --restore
 
 ## Window preferences and icons
 
-When the game preference file appears, the relay applies bordered 1280×720 defaults on an initial launcher click before forwarding input. It does this once, preserving the original file as `Option.ini.before-windowed.bak`. Existing preferences already backed up by this helper are left alone. The current game path is C:\Games\LineageII EU inside the configured prefix.
+In the optional relay mode, when the game preference file appears, the relay applies bordered 1280×720 defaults on an initial launcher click before forwarding input. It does this once, preserving the original file as `Option.ini.before-windowed.bak`. Existing preferences already backed up by this helper are left alone. The current game path is C:\Games\LineageII EU inside the configured prefix.
 
 Manual application, with the game closed:
 
@@ -102,4 +131,4 @@ Launcher runs disable the optional Wine crash debugger executable, retaining err
 
 The Wine host uses `LSUIElement` and the window helper is built with the Windows GUI subsystem. Both are needed: a console helper or a regular foreground Wine host can briefly create a Dock entry during the five-second window check. Wine can still promote actual application windows to foreground, so this does not promise one Dock entry for the launcher and game.
 
-The Mac driver supports an opt-in per-application `LineageBackgroundApp` setting. Our GUI helper configures it for the official launcher, its browser helpers and Wine desktop shell. Those services stay out of Dock; the Mac app owns the launcher and Runtime Log windows. The game, Frost and official installer do not opt in. The earlier activation-forwarding workaround has been removed. The Wine module change requires a separate game regression check; the Dock test alone establishes launcher behavior.
+The Mac driver supports an opt-in per-application `LineageBackgroundApp` setting. The helper configures launcher services for the background; direct startup then sets `Launcher.exe` to `N` so it owns a normal foreground window. Relay mode keeps it at `Y` and the Mac app owns the launcher and Runtime Log windows. The game, Frost and official installer do not opt in. The earlier activation-forwarding workaround has been removed. The Wine module change requires a separate game regression check; the Dock test alone establishes launcher behavior.

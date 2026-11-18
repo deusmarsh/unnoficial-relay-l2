@@ -27,3 +27,34 @@ For each useful experiment record:
 
 Keep unsuccessful experiments when they help avoid repeating work. Do not infer
 texture correctness or gameplay compatibility from startup alone.
+
+## Direct launcher display — 18 November 2026
+
+Environment: Apple M1 Pro, 16 GB, macOS 27.0, configured Sikarugir Wine 10
+with the existing guarded-mutex and per-application background patches. These
+interactive tests preceded this PR; its automated and packaged checks are recorded
+in the pull request. No private logs, account data or publisher files are included.
+
+Baseline: the native launcher displayed repeated Chromium screenshots and forwarded
+input through CDP. The maintainer reported substantial launcher lag.
+
+Change: show the official Wine window, set only `Launcher.exe`'s
+`LineageBackgroundApp` to `N`, and use `disable-gpu`, `disable-gpu-compositing`,
+`disable-accelerated-video-decode`, `force-device-scale-factor 1`, `in-process-gpu`.
+A stuck startup splash recovered after one reload once the official bridge was
+registered. Game updates completed and Play launched the client. A separate local
+updater certificate repair was also needed during diagnosis; it is not included in
+this performance change and is not attributed to direct display.
+
+Result: the maintainer reported a large improvement in launcher responsiveness;
+maximize/restore controls worked normally. This is qualitative same-Mac feedback,
+not an instrumented before/after FPS measurement or a clean-install guarantee.
+The PR makes this display the default and retains `--relay` as an explicit fallback.
+
+Game boundary: the client reached Gludio but retained severe stalls, damaged model
+rendering, missing in-game text and an unreadable dialog. Working Vulkan support
+alongside OpenGL did not remove those issues. An isolated DXVK/MoltenVK run showed
+about 0.4 FPS on the intro, while a simple D3D9 triangle/font test reached about
+120 FPS. That synthetic test does not establish game compatibility. No Vulkan
+runtime, DXVK deployment or game rendering change is included here. Further game
+performance investigation was deferred.

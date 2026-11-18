@@ -358,6 +358,7 @@ final class RelayDelegate: NSObject, NSApplicationDelegate {
     var frameHelper: Process?
     var lastFrameHelper = Date.distantPast
     var launchStarted = Date.distantPast
+    var launcherValidated = !AppPaths.packaged || attachOnly
     let runtimeConsole = RuntimeConsole()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -386,7 +387,7 @@ final class RelayDelegate: NSObject, NSApplicationDelegate {
         let root = AppPaths.scripts
         let task = Process()
         task.executableURL = AppPaths.python
-        task.arguments = [root.appendingPathComponent("run_stock_launcher.py").path,"--debug","--switch-file",root.appendingPathComponent("cef-switches.txt").path]
+        task.arguments = [root.appendingPathComponent("run_stock_launcher.py").path,"--display","relay","--debug","--switch-file",root.appendingPathComponent("cef-switches.txt").path]
         if finishSetup { task.arguments?.append("--finish-setup"); finishSetup = false }
         task.environment = AppPaths.environment
         task.currentDirectoryURL = AppPaths.data
@@ -394,6 +395,7 @@ final class RelayDelegate: NSObject, NSApplicationDelegate {
         task.terminationHandler = { [weak self] process in DispatchQueue.main.async {
             self?.launchTask = nil
             if process.terminationStatus != 0 { self?.showWaiting("Could not start launcher. Reopen the app to retry.") }
+            else { self?.launcherValidated = true; self?.poll() }
         } }
         launchTask = task
         do { try task.run(); launchStarted = Date(); showWaiting("Starting official launcher…") }
@@ -427,7 +429,7 @@ final class RelayDelegate: NSObject, NSApplicationDelegate {
         if windows.isEmpty { waitingWindow?.makeKeyAndOrderFront(nil); NSApp.activate(ignoringOtherApps:true) }
     }
     func poll() {
-        guard !polling, !stopping else { return }; polling = true
+        guard launcherValidated, !polling, !stopping else { return }; polling = true
         if AppPaths.packaged, !attachOnly, Date().timeIntervalSince(lastFrameHelper) > 5, frameHelper?.isRunning != true {
             lastFrameHelper = Date()
             let helper = Process(); helper.executableURL = AppPaths.python
@@ -474,8 +476,69 @@ final class RelayDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 }
 
+// Direct mode hands the UI to the official Wine window. It never creates a
+// RelayWindowController, captures screenshots, or runs the relay's hide timer.
+final class DirectLauncherDelegate: NSObject, NSApplicationDelegate {
+    var launchTask: Process?
+    var errorFile: FileHandle?
+    var errorURL: URL?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        let task = Process()
+        task.executableURL = AppPaths.python
+        task.arguments = [AppPaths.scripts.appendingPathComponent("run_stock_launcher.py").path, "--display", "direct"]
+        if CommandLine.arguments.contains("--finish-setup") { task.arguments?.append("--finish-setup") }
+        task.environment = AppPaths.environment
+        task.currentDirectoryURL = AppPaths.data
+        task.standardOutput = FileHandle.nullDevice
+        let logs = AppPaths.data.appendingPathComponent("logs")
+        do {
+            try FileManager.default.createDirectory(at: logs, withIntermediateDirectories: true,
+                                                    attributes: [.posixPermissions: 0o700])
+            let url = logs.appendingPathComponent("direct-start-\(UUID().uuidString).log")
+            guard FileManager.default.createFile(atPath: url.path, contents: nil,
+                                                 attributes: [.posixPermissions: 0o600]) else {
+                throw CocoaError(.fileWriteUnknown)
+            }
+            errorURL = url
+            errorFile = try FileHandle(forWritingTo: url)
+            task.standardError = errorFile
+            task.terminationHandler = { [weak self] process in
+                DispatchQueue.main.async {
+                    guard let self = self else { return }
+                    try? self.errorFile?.close()
+                    self.errorFile = nil
+                    if process.terminationStatus != 0 {
+                        let detail = self.errorURL.flatMap { try? String(contentsOf: $0, encoding: .utf8) } ?? ""
+                        self.showError(detail.isEmpty ? "Open the logs folder for startup details." : String(detail.suffix(4000)))
+                    }
+                    // The Wine window and game have their own processes and stay open.
+                    NSApp.terminate(nil)
+                }
+            }
+            launchTask = task
+            try task.run()
+            NSApp.setActivationPolicy(.accessory)
+        } catch {
+            try? errorFile?.close()
+            showError(error.localizedDescription)
+            NSApp.terminate(nil)
+        }
+    }
+    func showError(_ detail: String) {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = "Could not open Lineage II Launcher"
+        alert.informativeText = detail
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+}
+
 let attachOnly = CommandLine.arguments.contains("--attach-only")
 let app = NSApplication.shared
 let needsSetup = CommandLine.arguments.contains("--setup") || !FileManager.default.fileExists(atPath:AppPaths.config.path)
-let delegate: NSApplicationDelegate = needsSetup ? SetupDelegate() : RelayDelegate()
+let useRelay = attachOnly || CommandLine.arguments.contains("--relay")
+let delegate: NSApplicationDelegate = needsSetup ? SetupDelegate() : useRelay ? RelayDelegate() : DirectLauncherDelegate()
 app.setActivationPolicy(.regular); app.delegate = delegate; app.run()

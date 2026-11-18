@@ -1,7 +1,8 @@
 # Architecture map
 
 The official Windows launcher and game run in a project-owned Wine prefix. The
-native Mac app displays and controls launcher pages; it does not render the game.
+native Mac app handles setup and starts the official launcher. Direct Wine display
+is the default; the screenshot relay remains an explicit fallback. Neither renders the game.
 
 ```text
 Develop.command / dev -> dev.py
@@ -9,8 +10,9 @@ Develop.command / dev -> dev.py
              pinned downloads -> patched Wine + .NET -> isolated prefix
              official installer (human interaction) -> config.local.json
   run   -> incremental native build -> start_native_frame_relay.py
-             run_stock_launcher.py -> official launcher in Wine
-             localhost:8088 <-> NativeFrameRelay.swift (launcher frames and input)
+             run_stock_launcher.py -> official launcher in a direct Wine window
+             launcher_startup.py -> bounded splash recovery over localhost:8088
+             --relay: localhost:8088 <-> NativeFrameRelay.swift (frames and input)
              official Play -> game -> Direct3D 9 -> WineD3D -> OpenGL
   check -> offline boundary tests
 ```
@@ -23,9 +25,12 @@ Develop.command / dev -> dev.py
 - `SetupWizard.swift`: setup progress, confirmations, cancellation and handoff.
 - `install.py`, `dependencies.json`, `prepare_net3132.py`: verified dependency
   acquisition, source builds, .NET preparation, prefix checks and activation.
-- `NativeFrameRelay.swift`: Mac windows, live launcher frames, coordinates and input.
+- `NativeFrameRelay.swift`: direct launch handoff, plus fallback frame windows and input.
 - `start_native_frame_relay.py`, `run_stock_launcher.py`: launcher connection and
   prefix-scoped process handling. Port 8088 is local and controls authenticated pages.
+- `launcher_startup.py`, `launcher_connection.py`: finite startup checks and one
+  bridge-aware splash reload. Existing launcher pages are not reloaded on reopening.
+- `cef-direct-window.txt`: tested direct display switches; independent of relay switches.
 - `NativeLauncherWindow.c`, `launcher_window.py`: official WPF window integration.
 - `patches/`: Wine synchronization and per-application Mac background behavior.
 - `configure_game_window.py`: game window preferences. Game rendering is independent

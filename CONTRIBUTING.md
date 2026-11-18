@@ -24,9 +24,12 @@ Change the relevant source, then run:
 `run` fingerprints the Swift/UI builder and Windows helper inputs. It rebuilds
 changed native components before starting the launcher. Python scripts are loaded
 from the checkout on launch. There is no DMG generation or notarization step.
-Close and reopen the native launcher after a UI change so the running process uses
-the new binary. Closing the relay leaves Wine/game processes alive; close those
-explicitly when a task requires a full restart. Only one launcher may use port 8088.
+Close and reopen the launcher after a UI change so the next launch uses the new code.
+Direct Wine display is the default. After closing the official launcher, use
+`./dev run --relay` for the earlier screenshot display. Closing the relay leaves
+Wine/game processes alive; closing the direct official window may stop the game.
+Only one launcher may use port 8088. Startup refuses a mode switch while another
+mode is running and never restarts an active game or updater.
 
 Useful commands:
 

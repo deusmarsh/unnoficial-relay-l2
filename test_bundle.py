@@ -26,9 +26,12 @@ class BundleChecks(unittest.TestCase):
             config=data/'config.local.json'
             config.write_text(json.dumps(dict(prefix=str(prefix),wine=str(wine),wineserver=str(server),library_paths=[])))
             switch=data/'App With Spaces.txt';switch.write_text('disable-gpu\n')
-            with patch.object(runner,'CONFIG',config),patch.object(runner,'DATA',data),patch.object(runner,'HELPERS',data/'absent-helpers'),patch.object(sys,'argv',['run_stock_launcher.py','--debug','--finish-setup','--switch-file',str(switch)]),patch.object(runner.subprocess,'run',return_value=SimpleNamespace(returncode=128)) as stop,patch.object(runner.subprocess,'Popen',return_value=SimpleNamespace(pid=123)) as launch,contextlib.redirect_stdout(io.StringIO()):
+            with patch.object(runner,'CONFIG',config),patch.object(runner,'DATA',data),patch.object(runner,'HELPERS',data/'absent-helpers'),patch.object(runner,'running_images',return_value={'launcher.exe'}),patch.object(runner,'endpoint_free',return_value=True),patch.object(runner,'finish_loading',return_value=True),patch.object(sys,'argv',['run_stock_launcher.py','--display','relay','--debug','--finish-setup','--switch-file',str(switch)]),patch.object(runner.subprocess,'run',side_effect=lambda command,**kwargs:SimpleNamespace(returncode=128 if command[1]=='taskkill' else 0)) as stop,patch.object(runner.subprocess,'Popen',return_value=SimpleNamespace(pid=123)) as launch,contextlib.redirect_stdout(io.StringIO()):
                 runner.main()
-            self.assertEqual([call.args[0] for call in stop.call_args_list],[[str(wine),'taskkill','/F','/IM','winedbg.exe'],[str(wine),'taskkill','/F','/IM','Inn.games.exe'],[str(wine),'taskkill','/F','/IM','Launcher.exe'],[str(wine),'taskkill','/F','/IM','explorer.exe']])
+            commands=[call.args[0] for call in stop.call_args_list]
+            self.assertEqual([c[4] for c in commands if c[1:4]==['taskkill','/F','/IM']],
+                             ['Inn.games.exe','Launcher.exe','CefSharp.BrowserSubprocess.exe','winedbg.exe'])
+            self.assertFalse(any('-k' in c or '/T' in c or 'explorer.exe' in c for c in commands))
             self.assertIn('/d',launch.call_args.args[0])
             self.assertEqual(launch.call_args.args[0][-2:],['/sw',r'C:\lineage-relay\cef-switches.txt'])
             self.assertEqual((prefix/'drive_c/lineage-relay/cef-switches.txt').read_text(),'disable-gpu\n')

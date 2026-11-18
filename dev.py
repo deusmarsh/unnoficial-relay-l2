@@ -128,7 +128,7 @@ def check():
     env = environment()
     env.pop('LINEAGE_TEST_APP', None)
     subprocess.run([sys.executable, '-B', '-m', 'unittest', '-v',
-                    'test_installer', 'test_bundle', 'test_dev'],
+                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher'],
                    cwd=ROOT, env=env, check=True)
     print('Portable checks passed. This does not establish game rendering or gameplay.')
 
@@ -154,6 +154,7 @@ def main():
     parser.add_argument('action', nargs='?', choices=('setup', 'run', 'doctor', 'check', 'report'))
     parser.add_argument('--work-dir', type=Path, help='Setup only: a new dedicated runtime directory.')
     parser.add_argument('--prepare-only', action='store_true', help='Setup only: runtime checks without activation.')
+    parser.add_argument('--relay', action='store_true', help='Run only: use the legacy screenshot relay.')
     args = parser.parse_args()
     if args.action is None:
         if not sys.stdin.isatty():
@@ -169,6 +170,8 @@ def main():
         args.action = actions[int(answer) - 1]
     if args.action != 'setup' and (args.work_dir or args.prepare_only):
         parser.error('--work-dir and --prepare-only apply only to setup.')
+    if args.relay and args.action != 'run':
+        parser.error('--relay applies only to run.')
     if args.action == 'setup':
         extra = []
         if args.work_dir:
@@ -180,7 +183,7 @@ def main():
         value = config()
         require_runtime(value)
         build(value)
-        script('start_native_frame_relay.py')
+        script('start_native_frame_relay.py', *(['--relay'] if args.relay else []))
     elif args.action == 'doctor':
         doctor()
     elif args.action == 'check':

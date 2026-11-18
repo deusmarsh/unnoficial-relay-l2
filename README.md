@@ -41,13 +41,20 @@ See [experiment notes](docs/experiments.md) for the gameplay baseline.
 
 ## How it works
 
-The official launcher and game run through Wine. A native Mac window displays launcher
-pages and forwards input through its local Chromium endpoint. Account login, downloads
-and Play remain in the official launcher. The game renders in its own window through
-Direct3D 9 → WineD3D → OpenGL, separately from launcher frame streaming.
+The official launcher and game run through Wine. The default launcher opens its own
+Wine window with native window controls, using the tested Chromium `in-process-gpu`
+configuration. It avoids capturing, encoding and displaying a stream of screenshots.
+Account login, downloads and Play remain in the official launcher. The game renders
+in its own window through Direct3D 9 → WineD3D → OpenGL; its performance issues remain.
 
-Closing the relay does not close the official launcher or game. Only one launcher may
-use the local debug port 8088; do not expose it to the network.
+After closing the official launcher, `./dev run --relay` selects the previous screenshot
+display as a fallback. For a packaged app, use `open -a "Lineage II Launcher" --args --relay`.
+Close the launcher before switching modes and let active downloads finish. Closing
+the official launcher may also stop the game. Reopening the same mode preserves the
+running launcher and its downloads.
+
+Only one launcher may use the local debug port 8088; do not expose it to the network.
+Direct mode uses it briefly for startup recovery, without ongoing screenshot capture.
 
 ## Areas for contribution
 

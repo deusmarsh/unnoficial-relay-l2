@@ -15,8 +15,8 @@ FILES = (
     'licenses/WINE-LICENSE', 'licenses/WINE-COPYING.LIB',
     '.gitignore', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md',
     'NativeFrameRelay.swift', 'build_native_frame_relay.py',
-    'run_stock_launcher.py', 'start_native_frame_relay.py',
-    'Start-4game-Relay.command', 'cef-switches.txt', 'config.example.json',
+    'run_stock_launcher.py', 'start_native_frame_relay.py', 'launcher_startup.py', 'launcher_connection.py', 'test_launcher.py',
+    'Start-4game-Relay.command', 'cef-switches.txt', 'cef-direct-window.txt', 'config.example.json',
     'package_source.py', 'configure_game_window.py',
     'build_icons.swift', 'NativeLauncherWindow.c', 'launcher_window.py', 'configure_runtime_icon.py',
 )
