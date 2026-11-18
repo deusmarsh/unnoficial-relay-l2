@@ -36,6 +36,12 @@ for editing, rebuilding, and submitting changes.
 The GitHub checks cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
 
+### Screenshots from the world-entry run
+
+| Character selection | Loading the world |
+| --- | --- |
+| ![The selected character in the game client](docs/character-selection.jpg) | ![Loading screen after pressing Play](docs/world-loading.jpg) |
+
 ![Gludio after entering the game world, with the minimap and a blank dialog visible](docs/gludio-world-entry.jpg)
 
 *Gludio during a local alpha run. The city and HUD loaded, and a blank dialog remained on screen. Screenshot includes artwork from the official game.*
