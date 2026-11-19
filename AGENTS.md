@@ -20,7 +20,7 @@ need the maintainer's chat history. Instructions and commands are shared with hu
 
 | Task | Start with | Additional reading |
 | --- | --- | --- |
-| Launcher interface/input | NativeFrameRelay.swift, SetupWizard.swift | docs/architecture.md |
+| Launcher interface/input | NativeFrameRelay.swift, run_stock_launcher.py, launcher_startup.py | docs/architecture.md |
 | Source setup/dependencies | install.py, bootstrap_setup.py, dependencies.json | TECHNICAL.md |
 | Wine synchronization or Mac driver | patches/, GuardedMutexProbe.c, install.py | patches/README.md, docs/experiments.md |
 | Game rendering/performance | configure_game_window.py, run_stock_launcher.py | docs/architecture.md, docs/experiments.md |
@@ -40,7 +40,8 @@ need the maintainer's chat history. Instructions and commands are shared with hu
 
 ## Boundaries and validation
 
-- Preserve separation: relay frames are launcher UI; the game renders separately
+- Preserve separation: direct Wine display is the launcher default; relay frames
+  are a fallback for launcher UI. The game renders separately
   through WineD3D/OpenGL. A faster relay is not evidence of faster game rendering.
 - Keep runtime changes inside the configured project prefix. Do not kill all Wine
   processes, edit another installation or silently switch the active environment.

@@ -105,24 +105,33 @@ class DeveloperChecks(unittest.TestCase):
         self.assertFalse(any('iconutil' in list(map(str, c.args[0])) for c in commands.call_args_list))
         self.assertFalse(any('build_icons.swift' in str(c.args[0]) for c in commands.call_args_list))
 
-    def test_first_launch_handoff_reaches_official_runner(self):
+    def test_first_launch_handoff_selects_direct_or_relay_explicitly(self):
         import start_native_frame_relay as starter
-        from urllib.error import URLError
         from unittest.mock import Mock
-        for name in ('run_stock_launcher.py', 'cef-switches.txt', 'config.local.json'):
+        for name in ('run_stock_launcher.py', 'cef-direct-window.txt', 'cef-switches.txt', 'config.local.json'):
             (self.root / name).touch()
         self.products()
-        for finish in (False, True):
-            with self.subTest(finish=finish):
-                response = io.BytesIO(json.dumps([{'type': 'page', 'url': 'https://launcher.eu.4game.com/'}]).encode())
-                opener = Mock()
-                opener.open.side_effect = [URLError('not running'), response]
-                arguments = ['start_native_frame_relay.py'] + (['--finish-setup'] if finish else [])
-                with patch.object(starter, '__file__', str(self.root / 'start_native_frame_relay.py')), patch.object(sys, 'argv', arguments), patch.object(starter, 'build_opener', return_value=opener), patch.object(starter.subprocess, 'run') as runner, patch.object(starter.time, 'sleep'), contextlib.redirect_stdout(io.StringIO()):
-                    starter.main()
-                launch = runner.call_args_list[1].args[0]
-                self.assertEqual('--finish-setup' in launch, finish)
-                self.assertIn('--debug', launch)
+        for relay in (False, True):
+            for finish in (False, True):
+                with self.subTest(relay=relay, finish=finish):
+                    opener = Mock()
+                    opener.open.side_effect = lambda *a, **k: io.BytesIO(json.dumps(
+                        [{'type': 'page', 'url': 'https://launcher.eu.4game.com/'}]).encode())
+                    arguments = ['start_native_frame_relay.py'] + (['--relay'] if relay else []) + (['--finish-setup'] if finish else [])
+                    with patch.object(starter, '__file__', str(self.root / 'start_native_frame_relay.py')), patch.object(sys, 'argv', arguments), patch.object(starter, 'build_opener', return_value=opener), patch.object(starter.subprocess, 'run') as runner, contextlib.redirect_stdout(io.StringIO()):
+                        starter.main()
+                    opened = runner.call_args.args[0]
+                    self.assertEqual(opened[0], '/usr/bin/open')
+                    self.assertEqual('--relay' in opened, relay)
+                    if relay:
+                        launch = runner.call_args_list[1].args[0]
+                        self.assertEqual('--finish-setup' in launch, finish)
+                        self.assertIn('--debug', launch)
+                        self.assertIn('relay', launch)
+                    else:
+                        opener.open.assert_not_called()
+                        self.assertEqual('--finish-setup' in opened, finish)
+                        self.assertEqual(len(runner.call_args_list), 2)
 
     @unittest.skipUnless(sys.platform == 'darwin' and dev.os.environ.get('LINEAGE_TEST_SWIFT') == '1', 'Set LINEAGE_TEST_SWIFT=1 for the native Swift argument check')
     def test_swift_setup_preserves_custom_work_directory_with_spaces(self):
@@ -137,6 +146,18 @@ assert(AppPaths.sourceWorkDirectoryArguments(["app", "--work-dir"]).isEmpty)
         binary = self.root / 'argument-check'
         subprocess.run(['xcrun', 'swiftc', '-module-cache-path', str(self.root / 'module-cache'), str(source), str(main), '-o', str(binary)], check=True)
         subprocess.run([str(binary)], check=True)
+
+    def test_check_forwards_only_the_explicit_native_test_opt_in(self):
+        import package_source
+        (self.root / 'fixture.py').write_text('pass')
+        for flag in ('1', '0'):
+            with self.subTest(flag=flag), patch.object(package_source, 'FILES', ('fixture.py',)), \
+                 patch.dict(dev.os.environ, {'LINEAGE_TEST_SWIFT': flag, 'LINEAGE_DATA_DIR': '/foreign'}, clear=True), \
+                 patch.object(dev.subprocess, 'run') as run, contextlib.redirect_stdout(io.StringIO()):
+                dev.check()
+                env = run.call_args.kwargs['env']
+                self.assertEqual(env.get('LINEAGE_TEST_SWIFT'), '1' if flag == '1' else None)
+                self.assertNotIn('LINEAGE_DATA_DIR', env)
 
     def test_child_environment_cannot_redirect_to_packaged_installation(self):
         with patch.dict(dev.os.environ, {'LINEAGE_DATA_DIR': '/private/account', 'LINEAGE_PACKAGED': '1'}):

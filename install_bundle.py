@@ -88,6 +88,7 @@ def bootstrap(config, installer):
         commands=[[str(PAYLOAD/'helpers/NativeLauncherWindow.exe'),'--background-setup'],['wineboot','-u'],['cmd','/c','ver'],['reg','add',r'HKCU\Software\Microsoft\Avalon.Graphics','/v','DisableHWAcceleration','/t','REG_DWORD','/d','1','/f']]
         for args in commands:
             subprocess.run([config['wine'],*args],env=env,stdout=output,stderr=output,check=True,timeout=180)
+    setup.prepare_game_fonts(prefix)
     prepare(installer,PAYLOAD/'dotnet-runtime-3.1.32-win-x86.zip',DATA/'installer-net3132')
     result=subprocess.run([config['wine'],str(DATA/'dotnet31-runtime/dotnet.exe'),'--list-runtimes'],env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=60)
     if result.returncode or 'Microsoft.NETCore.App 3.1.32' not in result.stdout:raise RuntimeError('The .NET host check failed. See runtime-checks.log in the app data folder.')

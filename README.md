@@ -28,30 +28,55 @@ for editing, rebuilding, and submitting changes.
 | --- | --- |
 | Launcher startup, login, and game download | Worked on the maintainer's Mac |
 | Game startup, server selection, and character creation | Worked on the maintainer's Mac |
-| Entering the game world and sustained play | Still to be verified |
+| Entering the game world | Confirmed on the maintainer’s Mac. Gludio loaded after character selection. |
+| Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
-| Rendering and performance | Stuttering and incorrect textures or model colors remain. Earlier runs also showed missing text and a blank dialog. |
+| Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
+| Rendering and performance | Severe stalls and incorrect model colors remain. Reconnect/loading loops are unresolved. |
 
-The GitHub checks cover source tests and the macOS interface build.
+Status updated 19 November 2026. These are results from the maintainer’s existing
+installation, not a fresh-install or sustained-play guarantee. The GitHub checks
+cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
 
-![Lineage II game client at its login screen](docs/alpha-login.jpg)
+### Current local evidence
 
-*Game client during a local alpha run. Screenshot includes artwork from the official game.*
+![Readable character statistics and quest captions in Gludio after font repair](docs/font-ui-restored.png)
+
+*18 November: native UI text is readable after the two-font repair. Dark character
+and NPC models remain. This frame does not establish sustained gameplay.*
+
+### Earlier world-entry run before font repair
+
+| Character selection | Loading the world |
+| --- | --- |
+| ![The selected character in the game client](docs/character-selection.jpg) | ![Loading screen after pressing Play](docs/world-loading.jpg) |
+
+![Gludio after entering the game world, with the minimap and a blank dialog visible](docs/gludio-world-entry.jpg)
+
+*Gludio during a local alpha run. The city and HUD loaded, and a blank dialog remained on screen. Screenshot includes artwork from the official game.*
 
 ## How it works
 
-The official launcher and game run through Wine. A native Mac window displays launcher
-pages and forwards input through its local Chromium endpoint. Account login, downloads
-and Play remain in the official launcher. The game renders in its own window through
-Direct3D 9 → WineD3D → OpenGL, separately from launcher frame streaming.
+The official launcher and game run through Wine. The default launcher opens its own
+Wine window with native window controls, using the tested Chromium `in-process-gpu`
+configuration. It avoids capturing, encoding and displaying a stream of screenshots.
+Account login, downloads and Play remain in the official launcher. The game renders
+in its own window through Direct3D 9 → WineD3D → OpenGL; its performance issues remain.
 
-Closing the relay does not close the official launcher or game. Only one launcher may
-use the local debug port 8088; do not expose it to the network.
+After closing the official launcher, `./dev run --relay` selects the previous screenshot
+display as a fallback. For a packaged app, use `open -a "Lineage II Launcher" --args --relay`.
+Close the launcher before switching modes and let active downloads finish. Closing
+the official launcher may also stop the game. Reopening the same mode preserves the
+running launcher and its downloads.
+
+Only one launcher may use the local debug port 8088; do not expose it to the network.
+Direct mode uses it briefly for startup recovery, without ongoing screenshot capture.
 
 ## Areas for contribution
 
-- Reproduce and improve game stuttering, textures, colors and missing text.
+- Reproduce and improve game stuttering, model colors and reconnect/loading failures.
+- Verify automated font preparation on fresh installations and other Macs.
 - Verify fresh setup and game-world entry on other Macs.
 - Improve launcher display, input and setup reliability.
 - Investigate alternative rendering paths with before/after evidence.

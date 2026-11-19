@@ -35,6 +35,13 @@ static BOOL CALLBACK visit(HWND hwnd, LPARAM unused) {
     if (!ok) return TRUE;
     const wchar_t *name = wcsrchr(path, L'\\'); name = name ? name+1 : path;
     if (_wcsicmp(name, L"Launcher.exe")) return TRUE;
+    if (action == 5) {
+        ShowWindowAsync(hwnd, SW_RESTORE);
+        SetForegroundWindow(hwnd);
+        RemovePropW(hwnd,L"LineageRelayMinimized");
+        RemovePropW(hwnd,L"LineageRelayHidden");
+        matches++; return TRUE;
+    }
     if (large_icon && (action == 1 || action == 3 || action == 4)) {
         SendMessageTimeoutW(hwnd, WM_SETICON, ICON_BIG, (LPARAM)large_icon, SMTO_ABORTIFHUNG, 500, NULL);
         SendMessageTimeoutW(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)small_icon, SMTO_ABORTIFHUNG, 500, NULL);
@@ -85,6 +92,7 @@ static int run(int argc, wchar_t **argv) {
     if (argc > 1 && !wcscmp(argv[1], L"--restore")) action = 2;
     if (argc > 1 && !wcscmp(argv[1], L"--frame")) action = 3;
     if (argc > 1 && !wcscmp(argv[1], L"--hide")) action = 4;
+    if (argc > 1 && !wcscmp(argv[1], L"--show")) action = 5;
     if (argc > 2) {
         large_icon = LoadImageW(NULL, argv[2], IMAGE_ICON, 256, 256, LR_LOADFROMFILE);
         small_icon = LoadImageW(NULL, argv[2], IMAGE_ICON, 32, 32, LR_LOADFROMFILE);

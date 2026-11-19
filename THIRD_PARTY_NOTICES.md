@@ -36,6 +36,12 @@ Python distribution: https://github.com/astral-sh/python-build-standalone/releas
 
 The standalone app includes apple-codesign (rcodesign) 0.29.0 for local ad-hoc signing of the downloaded runtime, avoiding a dependency on Xcode's codesign_allocate. Its bundled COPYING notice and the corresponding apple-platform-rs source archive are included in Resources/Licenses and Resources/Source. This tool does not provide a Developer ID identity or notarize the app.
 
+Local game fonts: setup/startup uses Arial and Tahoma already present in the
+Mac's system supplemental font directory, copying absent files only into the
+configured local Wine prefix. This repository and its source/app packages do not
+include those font binaries or grant a license to redistribute them. Their
+existing license terms apply.
+
 ## ISRG Root X1 certificate
 
 `certificates/isrg-root-x1.pem` is the complete public ISRG Root X1 certificate
