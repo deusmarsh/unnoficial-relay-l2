@@ -59,7 +59,9 @@ def main():
     shutil.copytree(ROOT/'4gameRelay.app',app,symlinks=True)
     resources=app/'Contents/Resources';code=resources/'app';code.mkdir()
     code_files=['install_bundle.py','install.py','app_paths.py','dependencies.json','prepare_net3132.py','run_stock_launcher.py','launcher_startup.py','launcher_connection.py','configure_game_window.py','launcher_window.py','cef-switches.txt','cef-direct-window.txt']
+    code_files.extend(['prepare_game_fonts.py', 'prepare_updater_ca.py'])
     for name in code_files:shutil.copyfile(ROOT/name,code/name)
+    shutil.copytree(ROOT/'certificates',code/'certificates')
     py_stage=ROOT/'.build/python-install'
     setup.unpack(python_archive,py_stage)
     shutil.copytree(py_stage/'python',resources/'Python',symlinks=True)

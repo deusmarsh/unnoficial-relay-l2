@@ -147,6 +147,18 @@ assert(AppPaths.sourceWorkDirectoryArguments(["app", "--work-dir"]).isEmpty)
         subprocess.run(['xcrun', 'swiftc', '-module-cache-path', str(self.root / 'module-cache'), str(source), str(main), '-o', str(binary)], check=True)
         subprocess.run([str(binary)], check=True)
 
+    def test_check_forwards_only_the_explicit_native_test_opt_in(self):
+        import package_source
+        (self.root / 'fixture.py').write_text('pass')
+        for flag in ('1', '0'):
+            with self.subTest(flag=flag), patch.object(package_source, 'FILES', ('fixture.py',)), \
+                 patch.dict(dev.os.environ, {'LINEAGE_TEST_SWIFT': flag, 'LINEAGE_DATA_DIR': '/foreign'}, clear=True), \
+                 patch.object(dev.subprocess, 'run') as run, contextlib.redirect_stdout(io.StringIO()):
+                dev.check()
+                env = run.call_args.kwargs['env']
+                self.assertEqual(env.get('LINEAGE_TEST_SWIFT'), '1' if flag == '1' else None)
+                self.assertNotIn('LINEAGE_DATA_DIR', env)
+
     def test_child_environment_cannot_redirect_to_packaged_installation(self):
         with patch.dict(dev.os.environ, {'LINEAGE_DATA_DIR': '/private/account', 'LINEAGE_PACKAGED': '1'}):
             env = dev.environment()

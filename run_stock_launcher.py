@@ -14,6 +14,8 @@ import time
 
 from app_paths import DATA, CONFIG, HELPERS
 from launcher_startup import finish_loading
+from prepare_game_fonts import prepare_game_fonts
+from prepare_updater_ca import prepare_updater_ca
 
 BACKGROUND_KEY = r'HKCU\Software\Wine\AppDefaults\Launcher.exe\Mac Driver'
 
@@ -80,6 +82,8 @@ def main():
 
 def launch(args, config, prefix, install, host, command, switch, switch_name, logs):
     direct = args.display == 'direct'
+    prepare_game_fonts(prefix)
+    prepare_updater_ca(install / 'bin')
     env = os.environ.copy()
     # A launch must use the configured environment, not an inherited graphics test.
     for key in list(env):

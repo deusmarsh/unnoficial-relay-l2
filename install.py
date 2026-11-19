@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tarfile
 import time
+from prepare_game_fonts import prepare_game_fonts
 
 ROOT = Path(__file__).resolve().parent
 MANIFEST = json.loads((ROOT / 'dependencies.json').read_text())
@@ -268,6 +269,7 @@ def bootstrap(work, config, archives):
     prefix.mkdir(exist_ok=True)
     (prefix / MARKER).write_text('Isolated installer-owned Wine prefix\n')
     run([config['wine'], 'wineboot', '-u'], env=env, timeout=180)
+    prepare_game_fonts(prefix)
     run([config['wine'], 'cmd', '/c', 'ver'], env=env, timeout=60)
     run([config['wine'], 'reg', 'add', r'HKCU\Software\Microsoft\Avalon.Graphics', '/v', 'DisableHWAcceleration', '/t', 'REG_DWORD', '/d', '1', '/f'], env=env, timeout=60)
     from prepare_net3132 import prepare

@@ -31,12 +31,22 @@ for editing, rebuilding, and submitting changes.
 | Entering the game world | Confirmed on the maintainer’s Mac. Gludio loaded after character selection. |
 | Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
-| Rendering and performance | Stuttering and incorrect textures or model colors remain. Earlier runs also showed missing text and a blank dialog. |
+| Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
+| Rendering and performance | Severe stalls and incorrect model colors remain. Reconnect/loading loops are unresolved. |
 
-The GitHub checks cover source tests and the macOS interface build.
+Status updated 19 November 2026. These are results from the maintainer’s existing
+installation, not a fresh-install or sustained-play guarantee. The GitHub checks
+cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
 
-### Screenshots from the world-entry run
+### Current local evidence
+
+![Readable character statistics and quest captions in Gludio after font repair](docs/font-ui-restored.png)
+
+*18 November: native UI text is readable after the two-font repair. Dark character
+and NPC models remain. This frame does not establish sustained gameplay.*
+
+### Earlier world-entry run before font repair
 
 | Character selection | Loading the world |
 | --- | --- |
@@ -65,7 +75,8 @@ Direct mode uses it briefly for startup recovery, without ongoing screenshot cap
 
 ## Areas for contribution
 
-- Reproduce and improve game stuttering, textures, colors and missing text.
+- Reproduce and improve game stuttering, model colors and reconnect/loading failures.
+- Verify automated font preparation on fresh installations and other Macs.
 - Verify fresh setup and game-world entry on other Macs.
 - Improve launcher display, input and setup reliability.
 - Investigate alternative rendering paths with before/after evidence.

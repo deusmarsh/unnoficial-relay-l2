@@ -14,8 +14,10 @@ See [Contributing](CONTRIBUTING.md) for rebuilding after changes to Wine patches
 
 ## Standalone app preview
 
-These instructions apply if you already have the experimental disk image.
-The source alpha uses the setup steps above.
+These instructions apply to a separately built experimental disk image. The
+`alpha-demo` GitHub release contains a video and historical sources, not a DMG.
+The source alpha uses the setup steps above; older app bundles do not automatically
+receive later source changes.
 
 1. Open **Lineage II Launcher.dmg**.
 2. Drag **Lineage II Launcher.app** to **Applications**.
@@ -29,7 +31,7 @@ You do not need to type commands or install Python, Xcode or Homebrew. If Rosett
 
 This preview is ad-hoc signed, not Developer ID signed or notarized. Local execution is distinct from Gatekeeper acceptance of an app downloaded from the internet; normal public distribution still needs signing/notarization.
 
-## Storage and downloads
+## Standalone storage and downloads
 
 The app includes its own Python, Microsoft .NET 3.1.32, the prebuilt Wine patch, helper tools, icons and required notices/source for those bundled parts.
 
@@ -37,18 +39,42 @@ The pinned Wine engine and support packages are downloaded from their upstream p
 
 Private data is stored in `~/Library/Application Support/Lineage II for macOS`. Preparation uses several GB. The game needs roughly 41 GB separately. Completed downloads are reused after interruption; changed upstream files stop at a hash check.
 
+## Game UI fonts
+
+Setup and launcher startup copy the local macOS supplemental `Arial.ttf` and
+`Tahoma.ttf` into the configured Wine prefix as `C:\windows\Fonts\Arial.ttf`
+and `C:\windows\Fonts\tahoma.ttf`. The game opens these files directly;
+working Wine/GDI font substitution alone does not supply them. Existing files
+are kept, including names with different capitalization. Updating the source
+and running `./dev run` applies this to an existing configured installation;
+restart an already-running game to load the fonts.
+
+No font binaries are shipped or downloaded by this project. If either local
+supplemental font is absent, setup/startup reports the missing name and continues;
+missing game text may persist. Check the supplemental fonts on that Mac and
+restart through this launcher once they are available. See the
+[confirmed investigation](docs/experiments.md#missing-native-ui-text--18-november-2026).
+
 ## After setup
 
-Open the same app from Applications. It starts the official launcher and displays its page. Use Reload if the page gets stuck. If the launcher does not connect, Open Log shows its startup log. Windowed game preferences are applied once before initial launcher input after the game preference file appears.
+For source development, use `./dev run`. For a standalone build containing the
+current sources, open **Lineage II Launcher.app** from Applications. Direct mode
+opens the official Wine window; the Mac handoff app exits after startup. Reopening
+the same mode reuses a running launcher and preserves game/download work.
 
-Use **Lineage II Launcher.app** from Applications, rather than the Windows Inn.games desktop shortcut. That shortcut does not open the Mac interface.
+After closing the launcher and finishing active downloads, `./dev run --relay`
+selects the screenshot fallback. A packaged app accepts
+`open -a "Lineage II Launcher" --args --relay`. Relay mode supplies Reload and
+Show Runtime Log; closing that Mac window leaves the official launcher/game running.
+Direct-mode runtime logs are stored in the configured data directory. Closing the
+official launcher itself may also stop the game. Do not use the Windows Inn.games
+desktop shortcut to select a Mac display mode.
 
-The Mac app keeps launcher services out of Dock and hides the original blank launcher surface after connecting. **Runtime Log** replaces it with a normal Mac window, a short explanation and live output. Closing this console only hides the log. Stopping the Runtime process may also stop the game. Reopen the console from **Show Runtime Log** in the app menu.
-
-Closing the Mac app leaves the official launcher/game running. Quit them before rerunning setup on the same installation.
+Quit the launcher and game before rerunning setup on the same installation.
 
 ## Validation boundary
 
-The original environment reached server selection and character-creation screens. A separate source-based clean runtime build passed Windows, .NET-host and mutex checks and opened the publisher's agreement window. The standalone bundle is tested separately from a relocated copy with a new data directory, no original cache and access to the development workspace denied. The manual handoff is the first agreement window: no publisher terms or account login are accepted by automation.
+The existing installation reached Gludio, and a later two-file font repair restored
+native UI text. Sustained play remains unverified. A separate source-based clean runtime build passed Windows, .NET-host and mutex checks and opened the publisher's agreement window. The standalone bundle is tested separately from a relocated copy with a new data directory, no original cache and access to the development workspace denied. The manual handoff is the first agreement window: no publisher terms or account login are accepted by automation.
 
 See the [alpha status](README.md#alpha-status) for the current gameplay baseline.

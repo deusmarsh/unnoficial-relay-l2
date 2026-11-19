@@ -14,6 +14,7 @@ import json
 from pathlib import Path, PurePosixPath
 import struct
 import zipfile
+from prepare_updater_ca import prepare_updater_ca
 
 INSTALLER_SHA256 = 'f9606fbcd2adf2339a2d8d78ea13d2bf2d7f08d1f9537958b0feeda770d888c0'
 RUNTIME_SHA512 = '3cddda423359bc178dd5df8695a0b98c69c39ce846d53c316eda1436837147ba863ab01a606c72c9fae47fb82890a69a3c1916b1c4fdc1590c7113026617cf09'
@@ -112,6 +113,7 @@ def prepare(installer, runtime, target):
         (target / 'hostfxr.dll').write_bytes(archive.read('host/fxr/3.1.32/hostfxr.dll'))
     if (runtime_root / 'coreclr.dll').exists():
         raise ValueError('Runtime root contains unexpected app-local CoreCLR')
+    prepare_updater_ca(target)
     print(f'Extracted {count} bundle entries; overlaid {overlaid} verified runtime files.')
     print('Prepared only, not executed:', target.resolve())
     print('Use the clean dotnet host in:', runtime_root.resolve())

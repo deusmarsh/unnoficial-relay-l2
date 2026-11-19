@@ -127,8 +127,10 @@ def check():
     # Bundle integration tests are deliberately excluded from the portable suite.
     env = environment()
     env.pop('LINEAGE_TEST_APP', None)
+    if os.environ.get('LINEAGE_TEST_SWIFT') == '1':
+        env['LINEAGE_TEST_SWIFT'] = '1'
     subprocess.run([sys.executable, '-B', '-m', 'unittest', '-v',
-                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher'],
+                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher', 'test_game_fonts', 'test_updater_ca'],
                    cwd=ROOT, env=env, check=True)
     print('Portable checks passed. This does not establish game rendering or gameplay.')
 

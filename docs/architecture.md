@@ -33,6 +33,8 @@ Develop.command / dev -> dev.py
 - `cef-direct-window.txt`: tested direct display switches; independent of relay switches.
 - `NativeLauncherWindow.c`, `launcher_window.py`: official WPF window integration.
 - `patches/`: Wine synchronization and per-application Mac background behavior.
+- `prepare_game_fonts.py`: prepares missing physical Arial/Tahoma files from local
+  macOS fonts; font binaries are neither shipped nor downloaded.
 - `configure_game_window.py`: game window preferences. Game rendering is independent
   of launcher relay frame rate and Chromium switches.
 - `AppPaths.swift`, `app_paths.py`: resources versus writable local data.

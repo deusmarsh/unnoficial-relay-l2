@@ -20,15 +20,17 @@ Names below describe the app's processes. Publisher executables keep their origi
 | `wineboot.exe`, `cmd.exe`, `reg.exe`, `taskkill.exe`, `GuardedMutexProbe.exe` | Short setup/check/cleanup commands | No persistent Dock icon expected |
 | `winedbg.exe` | Wine crash debugger | Disabled for launcher runs; errors remain in Runtime Log |
 
-The current clean installation has reached the login screen. Frost and the game have not yet been launched in this fresh environment, so their process list and icon appearance are not confirmed here. Short-lived setup probes and Windows helper commands can also appear while setup runs.
+The earlier clean-install preview test stopped at launcher sign-in. Later trials in
+the existing installation reached Gludio and restored native UI text; they did not
+verify every helper process or Dock icon. See [current status](docs/experiments.md#current-status--19-november-2026). Short-lived setup probes and Windows helper commands can also appear while setup runs.
 
-In relay mode, the Mac app owns the launcher page and Runtime Log. Direct mode hands the UI to the official Wine window and the handoff app exits; local runtime logs remain in the data folder. Cmd+L or **Show Runtime Log** reopens the console. Closing it hides the log and keeps Wine running.
+In relay mode, the Mac app owns the launcher page and Runtime Log. Direct mode hands the UI to the official Wine window and the handoff app exits; local runtime logs remain in the data folder. In relay mode, Cmd+L or **Show Runtime Log** reopens the console. Closing it hides the log and keeps Wine running.
 
 ## Current Dock behavior
 
 | Component | Expected Dock behavior | Verification |
 | --- | --- | --- |
-| Native Mac interface | **Lineage II Launcher**, L icon; launcher and Runtime Log windows | Opens and connects locally |
+| Native Mac interface | **Lineage II Launcher**; direct mode exits after handoff, relay mode owns launcher and Runtime Log windows | Local handoff and relay checks; source builds omit custom icons by default |
 | Official launcher and Wine desktop shell | Direct mode: launcher is foreground, shell stays background. Relay mode: both background | Direct window controls and relay background mode tested locally |
 | Window helper and browser helpers | Background tasks | No repeated Dock tile creation in the helper test |
 | Official installer | Separate temporary application while reviewing terms/installing | Manual agreement handoff tested before this driver change |

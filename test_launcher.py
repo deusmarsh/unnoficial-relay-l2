@@ -27,6 +27,12 @@ class LaunchChecks(unittest.TestCase):
         self.server = self.data / 'wineserver'
         for file in (self.wine, self.server, self.install / 'Inn.games.exe', self.install / 'bin/Launcher.exe'):
             file.touch()
+        ca = patch.object(runner, 'prepare_updater_ca')
+        self.ca_preparation = ca.start()
+        self.addCleanup(ca.stop)
+        fonts = patch.object(runner, 'prepare_game_fonts')
+        self.font_preparation = fonts.start()
+        self.addCleanup(fonts.stop)
         self.config = self.data / 'config.local.json'
         self.config.write_text(json.dumps(dict(prefix=str(self.prefix), wine=str(self.wine),
                                                wineserver=str(self.server), library_paths=[])))
@@ -64,6 +70,8 @@ class LaunchChecks(unittest.TestCase):
         self.assertFalse(any('-k' in cmd or '/T' in cmd for cmd in calls))
         self.assertEqual(launch.call_args.kwargs['env']['WINEPREFIX'], str(self.prefix))
         recovery.assert_called_once()
+        self.font_preparation.assert_called_once_with(self.prefix)
+        self.ca_preparation.assert_called_once_with(self.install / 'bin')
 
     def test_reopen_preserves_active_game_download_and_page(self):
         calls, launch, recovery = self.invoke(images=('launcher.exe', '4updater.exe', 'l2.exe'))
@@ -103,6 +111,8 @@ class LaunchChecks(unittest.TestCase):
             runner.main()
         run.assert_not_called()
         launch.assert_not_called()
+        self.font_preparation.assert_not_called()
+        self.ca_preparation.assert_not_called()
         self.assertFalse((self.data / 'logs').exists())
 
     def test_inherited_experiments_do_not_change_selected_runtime(self):
