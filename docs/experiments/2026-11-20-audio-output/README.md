@@ -5,6 +5,16 @@ windows and drag them.** A screen recording confirms changing player positions,
 camera views and UI panels for roughly 95 seconds before another Reconnect.
 This is a substantial local responsiveness improvement, not stable gameplay yet.
 
+
+## Video recordings
+
+- [Walking and windows — 1:35, MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-world-walk-2026-11-20.mp4): a continuous excerpt from source seconds 30–125, ending before Reconnect.
+- [Full session — 2:21, MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-full-session-2026-11-20.mp4): login, selection, world interaction and the remaining Reconnect.
+
+Both are 720p viewing exports of the reviewed recording, at unchanged playback
+speed and without audio. Original recordings remain preserved. The videos are
+release assets, keeping large media files outside the source Git history.
+
 ## Environment and comparison
 
 Apple M1 Pro, 16 GB, macOS 27.0 (26A428), windowed game at 1497 x 804.
