@@ -7,6 +7,12 @@ ROOT = Path(__file__).resolve().parent
 FILES = (
     'dev', 'dev.py', 'Develop.command', 'test_dev.py', 'AGENTS.md', 'CONTRIBUTING.md',
     'docs/alpha-login.jpg', 'docs/font-ui-restored.png', 'docs/gludio-world-entry.jpg', 'docs/character-selection.jpg', 'docs/world-loading.jpg', 'docs/architecture.md', 'docs/experiments.md', 'docs/deferred-icons.md',
+    'docs/experiments/2026-11-20-audio-output/README.md',
+    'docs/experiments/2026-11-20-audio-output/measurements.json',
+    'docs/experiments/2026-11-20-audio-output/before-audio-output.png',
+    'docs/experiments/2026-11-20-audio-output/after-audio-output.png',
+    'docs/experiments/2026-11-20-audio-output/world-windows.png',
+    'docs/experiments/2026-11-20-audio-output/remaining-reconnect.png',
     '.github/pull_request_template.md', '.github/ISSUE_TEMPLATE/bug_report.md', '.github/workflows/check.yml',
     'test_bundle.py', 'AppPaths.swift', 'app_paths.py', 'install_bundle.py', 'build_bundle.py', 'extract_python_licenses.py',
     'PROCESSES.md', 'TECHNICAL.md', 'SetupWizard.swift', 'bootstrap_setup.py', 'INSTALL.md', 'Install.command', 'install.py', 'dependencies.json', 'prepare_net3132.py',

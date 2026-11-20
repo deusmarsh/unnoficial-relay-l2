@@ -1,6 +1,14 @@
 # Status and experiments
 
-## Current status — 19 November 2026
+## Latest local experiment — 20 November 2026
+
+A separate Highball/Wine 11 + mtld3d/Metal test copy became usable for walking,
+camera movement and UI interaction after disabling its audio output driver.
+Reconnect and material defects remain. This is one manually prepared local
+comparison, not a change to the normal installer or a sustained-play guarantee.
+See the [report with before/after screenshots](experiments/2026-11-20-audio-output/README.md).
+
+## Previous installation status — 19 November 2026
 
 On the maintainer’s Apple M1 Pro / 16 GB / macOS 27.0 installation, the client
 entered Gludio on 18 November. Missing native UI text was subsequently restored

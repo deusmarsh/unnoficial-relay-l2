@@ -1,0 +1,56 @@
+{
+  "status": "first_video_confirmed_usable_world_session_audio_output_disabled",
+  "runtime": "Highball x64 Wine + mtld3d v0.15.5",
+  "intervention": "WINEDLLOVERRIDES=winecoreaudio.drv=d inherited by official launcher",
+  "preflight_active_render_endpoints": {
+    "control": 1,
+    "experiment": 0
+  },
+  "sound_modules_still_loaded": [
+    "ALAudio.dll",
+    "DefOpenAL32.dll",
+    "wrap_oal.dll"
+  ],
+  "counter_epoch_modified": false,
+  "calendar_modified": false,
+  "game_binaries_modified": false,
+  "source_recording": "Maintainer recording, 20 November 2026, 20:53:13 local time; original retained privately",
+  "duration_seconds": 141.41833333333332,
+  "observed": [
+    "world visible by recording second 30",
+    "changing player positions and camera views",
+    "multiple different UI panels displayed through second 125",
+    "Reconnect visible by second 130"
+  ],
+  "user_report": [
+    "could walk",
+    "could move camera",
+    "could open and drag UI windows",
+    "lags almost absent compared to previous attempts"
+  ],
+  "hud_fps_snapshots": {
+    "30": 14.42,
+    "50": 18.28,
+    "60": 25.51,
+    "80": 18.87,
+    "100": 29.39,
+    "110": 24.08,
+    "120": 23.03,
+    "125": 24.12,
+    "130": 24.5
+  },
+  "reconnect_ST": "2026.11.20 20:55:22",
+  "limitations": [
+    "Single successful intervention run, no reversal replication yet.",
+    "HUD snapshots are not a continuous frame-time benchmark.",
+    "Improvement implicates audio output path but does not prove exact function or all causes.",
+    "Reconnect persists; no stable long session yet.",
+    "No sound device removal guarantee that audio code is not called."
+  ],
+  "evidence_sha256": {
+    "after-audio-output.png": "959ca87e6bda14c88727058017c0a4e2af1122afc915a40402f5cb822e92e18e",
+    "remaining-reconnect.png": "f5e262d5077ed889700ab89e78c909a2a0f0675a9b20723a80b7e1dcf97ecd32",
+    "before-audio-output.png": "9c3b949b7b33803b78e1461ffe067830489ae09b8f2563be118c7c10519a7b9e",
+    "world-windows.png": "ea72ad1b69643e408933881682f7a339eec6b7b69065f8c661fd2b9451c31b1f"
+  }
+}

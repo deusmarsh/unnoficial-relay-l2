@@ -29,12 +29,13 @@ for editing, rebuilding, and submitting changes.
 | Launcher startup, login, and game download | Worked on the maintainer's Mac |
 | Game startup, server selection, and character creation | Worked on the maintainer's Mac |
 | Entering the game world | Confirmed on the maintainer’s Mac. Gludio loaded after character selection. |
+| Short movement/UI trial | Confirmed in a separate Metal test copy with audio output disabled; Reconnect remains. [Evidence](docs/experiments/2026-11-20-audio-output/README.md). |
 | Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
 | Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
 | Rendering and performance | Severe stalls and incorrect model colors remain. Reconnect/loading loops are unresolved. |
 
-Status updated 19 November 2026. These are results from the maintainer’s existing
+Status updated 20 November 2026. These are results from the maintainer’s existing
 installation, not a fresh-install or sustained-play guarantee. The GitHub checks
 cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
