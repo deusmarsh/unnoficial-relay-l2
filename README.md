@@ -6,7 +6,21 @@ An unofficial source alpha for running the Lineage II EU launcher and Windows
 game on Apple Silicon Macs through Wine. Developed with AI assistance and local
 testing. Independent of Innova and NCSoft.
 
-[Download the alpha demo (.mov)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/alpha-demo/demo.mov)
+## Video demos
+
+**20 November 2026 — first usable world session in the Metal/audio-disabled experiment.**
+
+[![Walking and interactive windows in Gludio](docs/experiments/2026-11-20-audio-output/world-windows.png)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-world-walk-2026-11-20.mp4)
+
+- [Walking, camera movement and windows — 1:35, MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-world-walk-2026-11-20.mp4): continuous gameplay excerpt.
+- [Full session, including the remaining Reconnect — 2:21, MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-full-session-2026-11-20.mp4).
+
+720p exports at normal speed, without audio. The short excerpt ends before the
+Reconnect; the full recording preserves it. This manually prepared test copy is
+not installed by normal setup. Material defects and disconnects remain.
+[Experiment details](docs/experiments/2026-11-20-audio-output/README.md).
+
+**Earlier milestone:** [17 November alpha demo (.mov)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/alpha-demo/demo.mov), retained as project history.
 
 ## Quick start
 
@@ -29,12 +43,13 @@ for editing, rebuilding, and submitting changes.
 | Launcher startup, login, and game download | Worked on the maintainer's Mac |
 | Game startup, server selection, and character creation | Worked on the maintainer's Mac |
 | Entering the game world | Confirmed on the maintainer’s Mac. Gludio loaded after character selection. |
+| Short movement/UI trial | Confirmed in a separate Metal test copy with audio output disabled; Reconnect remains. [Evidence](docs/experiments/2026-11-20-audio-output/README.md). |
 | Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
 | Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
 | Rendering and performance | Severe stalls and incorrect model colors remain. Reconnect/loading loops are unresolved. |
 
-Status updated 19 November 2026. These are results from the maintainer’s existing
+Status updated 20 November 2026. These are results from the maintainer’s existing
 installation, not a fresh-install or sustained-play guarantee. The GitHub checks
 cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
