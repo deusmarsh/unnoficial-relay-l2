@@ -18,8 +18,9 @@ The video sources contain no audio tracks; sound was verified separately.
 baseline. See the report for the later higher-detail result and limitations.*
 
 The earlier reports below describe the audio-disabled workaround and remain
-historical evidence. This opt-in does not close pauses #4, Reconnect #9 or the
-separate materials investigation #2.
+historical evidence. The maintainer accepted the practical audio/performance result for #4 and
+requested its closure. Controlled benchmark claims are still not made.
+Reconnect #9 and the separate materials investigation #2 remain open.
 
 ## Current status — 21 November 2026
 

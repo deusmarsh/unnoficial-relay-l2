@@ -118,6 +118,8 @@ equivalence checks. They are distinct from the observed C4 improvement.
 
 Upstream: [x87sidecar](https://github.com/athei/x87sidecar),
 [pinned v1.9.1 release](https://github.com/athei/x87sidecar/releases/tag/v1.9.1).
-Reconnect [#9](https://github.com/deusmarsh/unnoficial-relay-l2/issues/9) and
-measured pause analysis [#4](https://github.com/deusmarsh/unnoficial-relay-l2/issues/4)
-remain open.
+The maintainer accepted this practical audio/performance result and requested
+closure of [#4](https://github.com/deusmarsh/unnoficial-relay-l2/issues/4).
+This records resolution of the observed blocker on the tested Mac, not completion
+of a controlled pause benchmark or a universal performance guarantee.
+Reconnect [#9](https://github.com/deusmarsh/unnoficial-relay-l2/issues/9) remains open.
