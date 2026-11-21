@@ -122,3 +122,15 @@ remain unchanged until explicit activation. The legacy standalone/DMG builder
 is not covered. The command verifies hardware/runtime setup, not a fresh game
 installation or sustained gameplay; Reconnect still recurs in official-client
 trials. [Evidence and limits](docs/experiments/2026-11-21-x87-audio/README.md).
+
+## Optional corrected Metal character materials
+
+The downstream material patch has a separate source-build command:
+`python3 material_fix.py`, followed by `./dev run`, after closing the configured
+launcher/game. It needs pinned Rust 1.99.0, the x86_64-apple-darwin target and
+llvm-tools-preview; see the [complete instructions and before/after evidence](docs/experiments/2026-11-21-material-fix/README.md).
+It validates the source archive, runs renderer tests and builds into a separate
+runtime. Audio/x87 selection and the game prefix are preserved. Use
+`python3 material_fix.py --disable` to restore the previous runtime. This is an
+explicit source opt-in; fresh setup's stock renderer and the legacy standalone
+builder are unchanged. Reconnect is unresolved.

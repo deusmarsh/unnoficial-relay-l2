@@ -5,6 +5,13 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent
 FILES = (
+    'docs/experiments/2026-11-21-material-fix/README.md',
+    'docs/experiments/2026-11-21-material-fix/before.png',
+    'docs/experiments/2026-11-21-material-fix/after.png',
+    'docs/experiments/2026-11-21-material-fix/before-after.png',
+    'docs/experiments/2026-11-21-material-fix/local-validation.json',
+    'docs/experiments/2026-11-21-material-fix/build-validation.json',
+    'material_fix.py', 'test_material_fix.py', 'patches/mtld3d-zero-multiply.patch',
     'docs/experiments/2026-11-21-x87-audio/README.md',
     'docs/experiments/2026-11-21-x87-audio/media.json',
     'docs/experiments/2026-11-21-x87-audio/validation.json',

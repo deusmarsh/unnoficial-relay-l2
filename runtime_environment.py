@@ -15,6 +15,9 @@ def wine_environment(config):
                DYLD_FALLBACK_LIBRARY_PATH=':'.join(str(Path(p).expanduser().resolve())
                                                   for p in config['library_paths']) + ':/usr/local/lib:/usr/lib')
     profile = config.get('runtime_profile')
+    if config.get('material_fix') is not None:
+        from material_fix import verify_renderer
+        verify_renderer(config)
     if profile == METAL_PROFILE:
         if config.get('x87_audio') is not None:
             from x87_audio import verified_sidecar

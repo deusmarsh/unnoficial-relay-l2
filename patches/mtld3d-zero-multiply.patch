@@ -1,0 +1,127 @@
+--- a/windows/core/src/dxso/emit.rs
++++ b/windows/core/src/dxso/emit.rs
+@@ -471,6 +471,7 @@
+     );
+     w(&mut out, POS_FIXUP_MSL);
+     w(&mut out, crate::vs_draw::VS_DRAW_MSL);
++    emit_legacy_multiply_helpers(&mut out, vs);
+     emit_const_rel_helper(&mut out, vs);
+     emit_vs_function(
+         &mut out,
+@@ -550,6 +551,7 @@
+         0,
+         inputs.extras(),
+     );
++    emit_legacy_multiply_helpers(&mut out, ps);
+     emit_const_rel_helper(&mut out, ps);
+     if variant.flags.contains(VariantFlags::SRGB_WRITE) {
+         emit_srgb_write_helper(&mut out);
+@@ -563,6 +565,44 @@
+ 
+ fn w(out: &mut String, s: &str) {
+     out.push_str(s);
++}
++
++/// Preserve a zero contribution when D3D9 shader arithmetic masks a non-finite operand.
++///
++/// An unused light can still evaluate reciprocal attenuation at a zero
++/// denominator. Plain Metal multiplication then propagates `0 * inf` as
++/// NaN into the vertex colour, even though that light's contribution is
++/// zero. Sanitize both operands before evaluating the product; MAD keeps
++/// its existing fused operation for finite inputs and retains the addend
++/// when either multiplicand is zero. Emit only the helpers a shader uses.
++fn emit_legacy_multiply_helpers(out: &mut String, program: &DxsoProgram) {
++    let has_mul = program.instructions.iter().any(|i| i.opcode == Opcode::Mul);
++    let has_mad = program.instructions.iter().any(|i| i.opcode == Opcode::Mad);
++    if !has_mul && !has_mad {
++        return;
++    }
++    w(
++        out,
++        "inline float4 mtld3d_mul_operand(float4 value, float4 other) {\n\
++             return select(value, float4(0.0), other == float4(0.0));\n\
++         }\n\n",
++    );
++    if has_mul {
++        w(
++            out,
++            "inline float4 mtld3d_legacy_mul(float4 a, float4 b) {\n\
++                 return mtld3d_mul_operand(a, b) * mtld3d_mul_operand(b, a);\n\
++             }\n\n",
++        );
++    }
++    if has_mad {
++        w(
++            out,
++            "inline float4 mtld3d_legacy_mad(float4 a, float4 b, float4 c) {\n\
++                 return fma(mtld3d_mul_operand(a, b), mtld3d_mul_operand(b, a), c);\n\
++             }\n\n",
++        );
++    }
+ }
+ 
+ /// Emit the linear→sRGB OETF helper for `D3DRS_SRGBWRITEENABLE`.
+@@ -1946,8 +1986,8 @@
+         Opcode::Mov => srcs[0].clone(),
+         Opcode::Add => format!("({} + {})", srcs[0], srcs[1]),
+         Opcode::Sub => format!("({} - {})", srcs[0], srcs[1]),
+-        Opcode::Mul => format!("({} * {})", srcs[0], srcs[1]),
+-        Opcode::Mad => format!("fma({}, {}, {})", srcs[0], srcs[1], srcs[2]),
++        Opcode::Mul => format!("mtld3d_legacy_mul({}, {})", srcs[0], srcs[1]),
++        Opcode::Mad => format!("mtld3d_legacy_mad({}, {}, {})", srcs[0], srcs[1], srcs[2]),
+         // Plain MSL `dot()`: Apple Silicon has hardware dot-product, so
+         // let the compiler use it. Cross-shader bit-invariance is not
+         // achievable in general (per-shader matrices and vertex inputs
+--- a/windows/core/src/dxso/emit/tests.rs
++++ b/windows/core/src/dxso/emit/tests.rs
+@@ -37,6 +37,50 @@
+ const SWIZ_IDENTITY: u8 = 0xE4;
+ const SWIZ_BGRA: u8 = 0xC6;
+ const SWIZ_BBBB: u8 = 0xAA;
++
++#[test]
++fn mul_and_mad_guard_both_operands_in_vertex_and_pixel_shaders() {
++    for (header, output) in [(VS_HEADER, 0xc00f_0000), (PS_HEADER, 0x800f_0800)] {
++        // mul r0, c0, c1; mad r1, c0, c1, c2; add r0, r0, r1; mov output, r0.
++        let program = parse(&[
++            header,
++            0x0300_0005,
++            0x800f_0000,
++            0xa0e4_0000,
++            0xa0e4_0001,
++            0x0400_0004,
++            0x800f_0001,
++            0xa0e4_0000,
++            0xa0e4_0001,
++            0xa0e4_0002,
++            0x0300_0002,
++            0x800f_0000,
++            0x80e4_0000,
++            0x80e4_0001,
++            0x0200_0001,
++            output,
++            0x80e4_0000,
++            END_TOKEN,
++        ])
++        .expect("arithmetic shader");
++        let msl = if header == VS_HEADER {
++            emit_vs_programmable(&program)
++        } else {
++            emit_ps_programmable(&program, VariantKey::default())
++        }
++        .expect("emit arithmetic shader");
++        assert_eq!(msl.matches("inline float4 mtld3d_mul_operand").count(), 1);
++        assert!(msl.contains("select(value, float4(0.0), other == float4(0.0))"));
++        assert!(msl.contains("mtld3d_mul_operand(a, b) * mtld3d_mul_operand(b, a)"));
++        assert!(msl.contains("fma(mtld3d_mul_operand(a, b), mtld3d_mul_operand(b, a), c)"));
++        let prefix = if header == VS_HEADER { "vs_c" } else { "ps_c" };
++        assert!(msl.contains(&format!("mtld3d_legacy_mul({prefix}[0], {prefix}[1])")));
++        assert!(msl.contains(&format!(
++            "mtld3d_legacy_mad({prefix}[0], {prefix}[1], {prefix}[2])"
++        )));
++        metal_compile_or_fail(&msl);
++    }
++}
+ 
+ #[test]
+ fn fetch4_emits_one_native_gather_and_keeps_ordinary_shaders_unchanged() {

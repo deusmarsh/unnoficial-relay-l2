@@ -77,3 +77,10 @@ source archive. Upstream: https://github.com/athei/x87sidecar.
 MIT license; copyright (c) 2025 Lifeisawful. The upstream notice is retained in
 [licenses/X87SIDECAR-LICENSE](licenses/X87SIDECAR-LICENSE).
 Game artwork in screenshots and video excerpts belongs to its respective owners.
+
+## Downstream mtld3d material arithmetic patch
+
+`patches/mtld3d-zero-multiply.patch` is a plainly marked local alteration of
+mtld3d v0.15.5 by Alexander Theissen. The upstream zlib notice is retained in
+`licenses/MTLD3D-LICENSE`. The opt-in helper downloads verified upstream source
+and builds locally; no modified runtime or publisher binary is embedded here.
