@@ -4,6 +4,17 @@
 responsiveness improvement. This integrates the configuration; it does not resolve
 Reconnects or prove sustained gameplay on a fresh installation.
 
+## Issue status
+
+PR [#11](https://github.com/deusmarsh/unnoficial-relay-l2/pull/11) integrates the
+tested configuration. It does not close [#2 (textures/model colors)](https://github.com/deusmarsh/unnoficial-relay-l2/issues/2),
+[#4 (pauses)](https://github.com/deusmarsh/unnoficial-relay-l2/issues/4), or
+[#9 (Reconnect)](https://github.com/deusmarsh/unnoficial-relay-l2/issues/9).
+OpenGL showed dark models; the later Metal recordings retain white/blue material
+defects. No same-scene comparison establishes correct materials. The
+[attempts, screenshots and closure criteria](../../experiments.md#rendering-attempts-and-open-issues--21-november-2026)
+separate the font repair, renderer trials and audio workaround.
+
 ## Install and run
 
 On Apple Silicon with macOS 15.4+, developer tools and Rosetta:

@@ -66,6 +66,12 @@ for editing, rebuilding, and submitting changes.
 | Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
 | Rendering and performance | Metal with audio output disabled substantially improved local responsiveness. Stalls, incorrect materials and Reconnect remain; no controlled average-FPS speedup is claimed. |
 
+**Texture issue [#2](https://github.com/deusmarsh/unnoficial-relay-l2/issues/2) remains open.**
+The OpenGL baseline showed dark models; the later Metal sessions still show
+white/blue material defects. Font preparation restored text, and disabling Wine
+audio output improved local interaction, but neither establishes correct materials.
+See the [attempts and remaining work](docs/experiments.md#rendering-attempts-and-open-issues--21-november-2026).
+
 Status updated 21 November 2026. These are results from the maintainer’s existing
 installation, not a fresh-install or sustained-play guarantee. The GitHub checks
 cover source tests and the macOS interface build.
