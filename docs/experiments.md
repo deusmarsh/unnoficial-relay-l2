@@ -233,7 +233,7 @@ prefix has been verified yet.
 
 The latest 5:52 recording from the existing test environment preserves two world
 returns, movement for over two minutes, and the remaining Reconnects.
-[Recipe, validation and full video draft](experiments/2026-11-21-metal-default/README.md).
+[Recipe, validation and published full video](experiments/2026-11-21-metal-default/README.md).
 
 ![Latest session returns, movement and final Reconnect](experiments/2026-11-21-metal-default/transitions.png)
 

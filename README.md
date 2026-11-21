@@ -10,10 +10,9 @@ testing. Independent of Innova and NCSoft.
 
 **21 November 2026 — several minutes of world interaction, with Reconnect still unresolved.**
 
-[![Movement and windows in the latest Metal session](docs/experiments/2026-11-21-metal-default/transitions.png)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/edit/untagged-e7f85edc20cd52401061)
+[![Movement and windows in the latest Metal session](docs/experiments/2026-11-21-metal-default/transitions.png)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-21/lineage2-metal-gameplay-2026-11-21-720p.mp4)
 
-[Latest full recording — 5:52, MP4 (release draft; maintainer access)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/edit/untagged-e7f85edc20cd52401061).
-Publication of this uploaded video draft is pending maintainer approval.
+[Latest full recording — 5:52, MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-21/lineage2-metal-gameplay-2026-11-21-720p.mp4).
 Two reconnects successfully return to the world. Movement is visible more than two
 minutes after the first return; the second interval lasts about 2:37 from return
 to the next dialog. The complete recording preserves the remaining stalls and

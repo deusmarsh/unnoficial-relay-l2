@@ -72,16 +72,16 @@ White/blue material defects remain. The scene and input are not matched to the
 seconds in the full recording. This evidence comes from the earlier test prefix,
 not the new source-created prefix.*
 
-[Uploaded full 5:52 MP4 release draft (maintainer access)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/edit/untagged-e7f85edc20cd52401061).
-Public release publication awaits maintainer approval. The export is 720p at normal
+[Published full 5:52 MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-21/lineage2-metal-gameplay-2026-11-21-720p.mp4).
+The [video release](https://github.com/deusmarsh/unnoficial-relay-l2/releases/tag/world-demo-2026-11-21) was published on 21 November 2026. The export is 720p at normal
 speed, has no audio tracks, and preserves the complete recording including all
 Reconnects. Original MOV and exported MP4 are preserved locally. Hashes, durations
 and export limitations are recorded in [video.json](video.json).
 
-![Uploaded video in the GitHub release draft, awaiting publication](video-release-draft.jpg)
+![Historical screenshot of the uploaded video before publication](video-release-draft.jpg)
 
-*Publication review evidence, not a gameplay test. This draft is private to users
-with repository permissions until publication.*
+*Historical draft screenshot preserved as publication review evidence, not a
+gameplay test. The video is now publicly available through the release above.*
 
 ## Validation and remaining manual work
 

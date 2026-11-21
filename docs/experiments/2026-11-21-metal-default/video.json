@@ -10,5 +10,8 @@
   "playback_speed": 1,
   "resolution_preset": "1280x720",
   "editing": "Full recording; video-only transcode, no cuts or speed changes",
-  "limitations": "Includes Reconnects. Existing experimental installation; not a fresh-setup gameplay validation."
+  "limitations": "Includes Reconnects. Existing experimental installation; not a fresh-setup gameplay validation.",
+  "release_url": "https://github.com/deusmarsh/unnoficial-relay-l2/releases/tag/world-demo-2026-11-21",
+  "video_url": "https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-21/lineage2-metal-gameplay-2026-11-21-720p.mp4",
+  "published_at": "2026-11-21T14:27:20Z"
 }
