@@ -73,6 +73,16 @@ class LaunchChecks(unittest.TestCase):
         self.font_preparation.assert_called_once_with(self.prefix)
         self.ca_preparation.assert_called_once_with(self.install / 'bin')
 
+    def test_metal_setup_profile_reaches_official_launcher_environment(self):
+        value = json.loads(self.config.read_text())
+        value.update(runtime_profile='metal-no-audio-v1', framework_path=str(self.data / 'frameworks'))
+        self.config.write_text(json.dumps(value))
+        _, launch, _ = self.invoke()
+        env = launch.call_args.kwargs['env']
+        self.assertIn('winecoreaudio.drv=d', env['WINEDLLOVERRIDES'])
+        self.assertEqual(env['MTLD3D_CONFIG'], 'color.hdr.enable=false;shader.asyncCompile=false')
+        self.assertEqual(env['DYLD_FRAMEWORK_PATH'], str(self.data / 'frameworks'))
+
     def test_reopen_preserves_active_game_download_and_page(self):
         calls, launch, recovery = self.invoke(images=('launcher.exe', '4updater.exe', 'l2.exe'))
         self.assertEqual(len(calls), 1)

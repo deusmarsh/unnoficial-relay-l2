@@ -29,6 +29,9 @@ def main():
     parser.add_argument('--skip-dmg',action='store_true')
     args=parser.parse_args()
     work=args.prepared_dir.resolve();out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
+    prepared_config = work/'config.prepared.json'
+    if prepared_config.is_file() and json.loads(prepared_config.read_text()).get('runtime_profile'):
+        raise SystemExit('The legacy standalone builder does not package Metal. Use the source setup/run workflow; see INSTALL.md.')
     cache=work/'cache'
     if not (work/setup.MARKER).is_file():raise SystemExit('Prepare the maintainer runtime first with install.py --prepare-only.')
     python_archive=setup.fetch(setup.MANIFEST['python'],cache)
@@ -59,7 +62,7 @@ def main():
     shutil.copytree(ROOT/'4gameRelay.app',app,symlinks=True)
     resources=app/'Contents/Resources';code=resources/'app';code.mkdir()
     code_files=['install_bundle.py','install.py','app_paths.py','dependencies.json','prepare_net3132.py','run_stock_launcher.py','launcher_startup.py','launcher_connection.py','configure_game_window.py','launcher_window.py','cef-switches.txt','cef-direct-window.txt']
-    code_files.extend(['prepare_game_fonts.py', 'prepare_updater_ca.py'])
+    code_files.extend(['prepare_game_fonts.py', 'prepare_updater_ca.py', 'runtime_environment.py'])
     for name in code_files:shutil.copyfile(ROOT/name,code/name)
     shutil.copytree(ROOT/'certificates',code/'certificates')
     py_stage=ROOT/'.build/python-install'

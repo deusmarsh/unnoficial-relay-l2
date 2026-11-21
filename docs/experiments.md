@@ -220,3 +220,22 @@ about 0.4 FPS on the intro, while a simple D3D9 triangle/font test reached about
 120 FPS. That synthetic test does not establish game compatibility. No Vulkan
 runtime, DXVK deployment or game rendering change is included here. Further game
 performance investigation was deferred.
+
+
+## Reproducible Metal/audio-disabled source setup — 21 November 2026
+
+The source installer now prepares pinned Highball Wine 11.0, mtld3d v0.15.5 and
+the CrossOver 26.3.0 guarded-mutex rebuild in a new dedicated directory. Setup and
+launch share the audio-disabled environment. On M1 Pro the fresh-prefix checks
+passed: mutex stress, .NET 3.1.32, a 32-bit mtld3d D3D9 device and presentation,
+and zero active playback endpoints. No publisher login or gameplay in that new
+prefix has been verified yet.
+
+The latest 5:52 recording from the existing test environment preserves two world
+returns, movement for over two minutes, and the remaining Reconnects.
+[Recipe, validation and full video draft](experiments/2026-11-21-metal-default/README.md).
+
+![Latest session returns, movement and final Reconnect](experiments/2026-11-21-metal-default/transitions.png)
+
+*Original review contact sheet; video seconds are not a controlled FPS benchmark.
+The recording predates the new source-created prefix.*

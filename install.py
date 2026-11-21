@@ -252,13 +252,8 @@ def prepare_runtime(work, archives, jobs):
 
 
 def wine_env(config):
-    env = os.environ.copy()
-    for key in list(env):
-        if key.startswith(('COMPlus_', 'DOTNET_', 'WINE')): env.pop(key, None)
-    env.update(WINEPREFIX=config['prefix'], WINEDEBUG='-all,err+all',
-               WINEDLLOVERRIDES='winemenubuilder.exe=d', DOTNET_MULTILEVEL_LOOKUP='0',
-               DYLD_FALLBACK_LIBRARY_PATH=':'.join(config['library_paths']) + ':/usr/local/lib:/usr/lib')
-    return env
+    from runtime_environment import wine_environment
+    return wine_environment(config)
 
 
 def bootstrap(work, config, archives):
@@ -269,6 +264,9 @@ def bootstrap(work, config, archives):
     prefix.mkdir(exist_ok=True)
     (prefix / MARKER).write_text('Isolated installer-owned Wine prefix\n')
     run([config['wine'], 'wineboot', '-u'], env=env, timeout=180)
+    if config.get('runtime_profile') == 'metal-no-audio-v1':
+        import metal_runtime
+        metal_runtime.install_prefix(config, sys.modules[__name__])
     prepare_game_fonts(prefix)
     run([config['wine'], 'cmd', '/c', 'ver'], env=env, timeout=60)
     run([config['wine'], 'reg', 'add', r'HKCU\Software\Microsoft\Avalon.Graphics', '/v', 'DisableHWAcceleration', '/t', 'REG_DWORD', '/d', '1', '/f'], env=env, timeout=60)
@@ -303,35 +301,41 @@ def prerequisites():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--gui', action='store_true', help=argparse.SUPPRESS)
-    parser.add_argument('--work-dir', type=Path, default=ROOT / '.local')
+    parser.add_argument('--work-dir', type=Path, default=ROOT / '.local-metal-v1')
     parser.add_argument('--prepare-only', action='store_true', help='Download, build and smoke-test; do not open the official installer or activate this installation.')
     parser.add_argument('--plan', action='store_true', help='Show the recipe without downloading or changing anything.')
     parser.add_argument('--jobs',type=int,default=min(os.cpu_count() or 2,8))
     args = parser.parse_args()
+    from metal_runtime import DEPENDENCIES
+    download_keys = (*DEPENDENCIES, 'dotnet', 'installer')
     global GUI
     GUI = args.gui
     if GUI and os.getpgrp() != os.getpid():
         os.setsid()  # Setup owns this process group; cancellation never targets other apps.
     if args.plan:
-        print('1. Check Apple Silicon, Command Line Tools and Rosetta.\n2. Confirm downloads; verify pinned hashes.\n3. Build Bison and the Wine synchronization backport.\n4. Package Wine and support libraries; create an isolated prefix.\n5. Prepare .NET and official installer; run smoke tests.\n6. Confirm and open the official installer; finish its prompts yourself.\n7. Build relay/icons and activate the local configuration.\n8. Install the game and sign in using the official launcher.')
-        for key, item in MANIFEST.items(): print(key + ': ' + item['url'])
+        print('1. Check Apple Silicon, Command Line Tools and Rosetta.\n2. Confirm downloads; verify pinned hashes.\n3. Build Bison and the CrossOver 26.3 synchronization backport.\n4. Install pinned Highball Wine and mtld3d Metal; disable Wine audio output in a new prefix.\n5. Prepare .NET and official installer; test synchronization, Metal and disabled audio.\n6. Confirm and open the official installer; finish its prompts yourself.\n7. Build relay/icons and activate the local configuration.\n8. Install the game and sign in using the official launcher.')
+        for key in download_keys: print(key + ': ' + MANIFEST[key]['url'])
         return
     if args.jobs < 1: parser.error('--jobs must be positive')
     stage('Checking your Mac', 'Apple Silicon, developer tools and Rosetta')
+    if platform.mac_ver()[0] and tuple(map(int, platform.mac_ver()[0].split('.')[:2])) < (15, 4):
+        raise RuntimeError('The Metal runtime requires macOS 15.4 or later.')
     prerequisites()
     work = args.work_dir.expanduser().resolve()
     if work == ROOT or ROOT.is_relative_to(work): raise RuntimeError('Choose a dedicated work directory, not the source directory or its parent.')
     if work.exists() and any(work.iterdir()) and not (work / MARKER).is_file(): raise RuntimeError('Refusing a nonempty, unowned work directory: ' + str(work))
-    confirm('Download and prepare the runtime? Setup needs several GB; the game needs about 41 GB separately. Your existing installation will be kept.' if GUI else 'Prepare an isolated Wine installation at ' + str(work) + '? Downloads total several hundred MB; builds require several GB. Game download (~41 GB) is separate. No account data is requested by this script.')
+    confirm('Download and prepare the runtime? Setup needs several GB; the game needs about 41 GB separately. New installs use Metal with sound disabled. Reconnect remains unresolved. Your existing installation will be kept.' if GUI else 'Prepare an isolated Wine installation at ' + str(work) + '? Downloads total about 1 GB; builds require several GB. Game download (~41 GB) is separate. Metal rendering and disabled audio are the defaults. Reconnect remains unresolved. No account data is requested by this script.')
     work.mkdir(parents=True,exist_ok=True); (work / MARKER).write_text('Owned by Lineage macOS installer\n')
     cache = work / 'cache'; cache.mkdir(exist_ok=True)
     stage('Downloading dependencies', 'Each download is checked against its pinned hash.')
-    archives = {key:fetch(item,cache) for key,item in MANIFEST.items() if key in ('engine','support','compiler','wine_source','bison','dotnet','installer')}
+    archives = {key: fetch(MANIFEST[key], cache) for key in download_keys}
     stage('Building the runtime', 'The first build takes several minutes. You can leave this window open.')
-    config = prepare_runtime(work,archives,args.jobs)
+    import metal_runtime
+    config = metal_runtime.prepare(work, archives, args.jobs, sys.modules[__name__])
     (work / 'config.prepared.json').write_text(json.dumps(config,indent=2)+'\n'); (work / 'config.prepared.json').chmod(0o600)
     stage('Testing the runtime', 'Preparing an isolated Windows environment and checking the Wine patch.')
     bootstrap(work,config,archives)
+    metal_runtime.smoke_test(work, config, sys.modules[__name__])
     print('Runtime build and smoke tests passed. Prepared config:',work / 'config.prepared.json')
     if args.prepare_only:
         event('complete', title='Preparation complete', detail='Runtime checks passed. Your active installation was not changed.', launch=False)

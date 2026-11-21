@@ -8,7 +8,19 @@ testing. Independent of Innova and NCSoft.
 
 ## Video demos
 
-**20 November 2026 — first usable world session in the Metal/audio-disabled experiment.**
+**21 November 2026 — several minutes of world interaction, with Reconnect still unresolved.**
+
+[![Movement and windows in the latest Metal session](docs/experiments/2026-11-21-metal-default/transitions.png)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/edit/untagged-e7f85edc20cd52401061)
+
+[Latest full recording — 5:52, MP4 (release draft; maintainer access)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/edit/untagged-e7f85edc20cd52401061).
+Publication of this uploaded video draft is pending maintainer approval.
+Two reconnects successfully return to the world. Movement is visible more than two
+minutes after the first return; the second interval lasts about 2:37 from return
+to the next dialog. The complete recording preserves the remaining stalls and
+Reconnects. It is normal-speed, 720p and silent; it is not six uninterrupted minutes
+of stable play. [Setup and evidence](docs/experiments/2026-11-21-metal-default/README.md).
+
+**20 November 2026 — earlier first usable world session.**
 
 [![Walking and interactive windows in Gludio](docs/experiments/2026-11-20-audio-output/world-windows.png)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-world-walk-2026-11-20.mp4)
 
@@ -16,22 +28,28 @@ testing. Independent of Innova and NCSoft.
 - [Full session, including the remaining Reconnect — 2:21, MP4](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/world-demo-2026-11-20/lineage2-metal-full-session-2026-11-20.mp4).
 
 720p exports at normal speed, without audio. The short excerpt ends before the
-Reconnect; the full recording preserves it. This manually prepared test copy is
-not installed by normal setup. Material defects and disconnects remain.
+Reconnect; the full recording preserves it. This earlier recording came from the manually prepared test copy. Material defects and disconnects remain.
 [Experiment details](docs/experiments/2026-11-20-audio-output/README.md).
 
 **Earlier milestone:** [17 November alpha demo (.mov)](https://github.com/deusmarsh/unnoficial-relay-l2/releases/download/alpha-demo/demo.mov), retained as project history.
 
 ## Quick start
 
-On an Apple Silicon Mac with macOS 13 or later, clone or download this repository.
+On an Apple Silicon Mac with macOS 15.4 or later, clone or download this repository.
 Allow several GB for setup and roughly 41 GB for the game. Setup prompts for
 Apple's Command Line Tools and Rosetta if needed.
 
 1. Open **Develop.command** and choose **Set up / resume**, or run `./dev setup`.
-2. Follow the setup wizard and complete the official publisher's installer.
+2. New source setups use Metal rendering with game/launcher sound disabled.
+   Follow the setup wizard and complete the official publisher's installer.
 3. Choose **Run changed sources** or run `./dev run`. Sign in and download the
    game in the official launcher.
+
+Existing installations keep their configured runtime. To move to Metal, close the
+launcher/game and run `./dev setup`; the new default `.local-metal-v1` directory
+keeps the old prefix and downloaded game intact. If that directory already contains
+an older recipe, choose a new `--work-dir`. Sign-in and game installation in the
+new prefix are still manual.
 
 See [Installation](INSTALL.md) for setup details and [Contributing](CONTRIBUTING.md)
 for editing, rebuilding, and submitting changes.
@@ -43,13 +61,13 @@ for editing, rebuilding, and submitting changes.
 | Launcher startup, login, and game download | Worked on the maintainer's Mac |
 | Game startup, server selection, and character creation | Worked on the maintainer's Mac |
 | Entering the game world | Confirmed on the maintainer’s Mac. Gludio loaded after character selection. |
-| Short movement/UI trial | Confirmed in a separate Metal test copy with audio output disabled; Reconnect remains. [Evidence](docs/experiments/2026-11-20-audio-output/README.md). |
+| Short movement/UI trial | Confirmed in Metal test sessions with audio output disabled; latest recording includes two world returns lasting over two minutes each. Reconnect remains. [Evidence](docs/experiments/2026-11-20-audio-output/README.md). |
 | Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
 | Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
-| Rendering and performance | Severe stalls and incorrect model colors remain. Reconnect/loading loops are unresolved. |
+| Rendering and performance | Metal with audio output disabled substantially improved local responsiveness. Stalls, incorrect materials and Reconnect remain; no controlled average-FPS speedup is claimed. |
 
-Status updated 20 November 2026. These are results from the maintainer’s existing
+Status updated 21 November 2026. These are results from the maintainer’s existing
 installation, not a fresh-install or sustained-play guarantee. The GitHub checks
 cover source tests and the macOS interface build.
 See [experiment notes](docs/experiments.md) for the gameplay baseline.
@@ -76,8 +94,9 @@ and NPC models remain. This frame does not establish sustained gameplay.*
 The official launcher and game run through Wine. The default launcher opens its own
 Wine window with native window controls, using the tested Chromium `in-process-gpu`
 configuration. It avoids capturing, encoding and displaying a stream of screenshots.
-Account login, downloads and Play remain in the official launcher. The game renders
-in its own window through Direct3D 9 → WineD3D → OpenGL; its performance issues remain.
+Account login, downloads and Play remain in the official launcher. New source setups render the game
+in its own window through Direct3D 9 → mtld3d → Metal, with Wine audio output disabled.
+Older configured installations retain their previous renderer and audio settings.
 
 After closing the official launcher, `./dev run --relay` selects the previous screenshot
 display as a fallback. For a packaged app, use `open -a "Lineage II Launcher" --args --relay`.

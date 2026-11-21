@@ -1,0 +1,14 @@
+{
+  "recorded_date": "2026-11-21",
+  "source_file": "recording-120057.mov",
+  "source_sha256": "060806f3b2d51160c912bb4e2d0dd9e49c57e47f403a202b898934955c6a4592",
+  "source_duration_seconds": 351.6566666667,
+  "export_file": "lineage2-metal-gameplay-2026-11-21-720p.mp4",
+  "export_sha256": "2eb450a1f85d69c005ee9eb7030f1ec7155f941d5ffeaefa30858eabb33cbbab",
+  "export_duration_seconds": 351.665,
+  "export_audio_tracks": 0,
+  "playback_speed": 1,
+  "resolution_preset": "1280x720",
+  "editing": "Full recording; video-only transcode, no cuts or speed changes",
+  "limitations": "Includes Reconnects. Existing experimental installation; not a fresh-setup gameplay validation."
+}

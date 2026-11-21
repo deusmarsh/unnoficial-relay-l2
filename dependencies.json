@@ -53,5 +53,20 @@
     "url": "https://github.com/indygreg/apple-platform-rs/archive/refs/tags/apple-codesign/0.29.0.tar.gz",
     "file": "apple-platform-rs-0.29.0-source.tar.gz",
     "sha256": "e92e27c2d0738523b5f0bfc2da5dbab33601568cfeff3e1d40eadd0ffb8e5a98"
+  },
+  "metal_engine": {
+    "url": "https://github.com/gauthierpiarrette/highball-engine/releases/download/engine-wine-11.0-20261114T185735Z-fiber-mirror-switch/engine-wine-11.0-20261114T185735Z-fiber-mirror-switch.tar.gz",
+    "file": "engine-wine-11.0-20261114T185735Z-fiber-mirror-switch.tar.gz",
+    "sha256": "ee1609f037b77d9a1896f3444c7d939ce91f39c81ffa729fdf4d6bdddb34af89"
+  },
+  "metal_renderer": {
+    "url": "https://github.com/athei/mtld3d/releases/download/v0.15.5/mtld3d.tar.xz",
+    "file": "mtld3d.tar.xz",
+    "sha256": "7891b4aa01db634315308bc922bb300d1706528adb9f4e828067001542540bef"
+  },
+  "metal_wine_source": {
+    "url": "https://media.codeweavers.com/pub/crossover/source/crossover-sources-26.3.0.tar.gz",
+    "file": "crossover-sources-26.3.0.tar.gz",
+    "sha256": "ac99c8ca4b3848f3e81784135f023df266b61c2345726ea55a50b3e030dd6872"
   }
 }

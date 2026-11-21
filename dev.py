@@ -46,6 +46,13 @@ def config():
 
 def runtime_matches(value):
     """A source-built runtime must match the currently published patches."""
+    if value.get('runtime_profile') == 'metal-no-audio-v1':
+        from metal_runtime import identity
+        work = Path(value['prefix']).expanduser().resolve().parent
+        stamp = work / '.metal-runtime-identity'
+        expected = identity(ROOT, json.loads((ROOT / 'dependencies.json').read_text()))
+        return (value.get('runtime_identity') == expected and stamp.is_file()
+                and stamp.read_text().strip() == expected)
     work = Path(value['prefix']).expanduser().resolve().parent
     marker = work / 'wine-source/wine-wine-10.0/.relay-patch'
     expected = hashlib.sha256(b''.join((ROOT / 'patches' / name).read_bytes()
@@ -130,7 +137,7 @@ def check():
     if os.environ.get('LINEAGE_TEST_SWIFT') == '1':
         env['LINEAGE_TEST_SWIFT'] = '1'
     subprocess.run([sys.executable, '-B', '-m', 'unittest', '-v',
-                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher', 'test_game_fonts', 'test_updater_ca'],
+                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher', 'test_game_fonts', 'test_updater_ca', 'test_metal_runtime'],
                    cwd=ROOT, env=env, check=True)
     print('Portable checks passed. This does not establish game rendering or gameplay.')
 
