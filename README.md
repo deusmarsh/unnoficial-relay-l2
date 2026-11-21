@@ -6,7 +6,33 @@ An unofficial source alpha for running the Lineage II EU launcher and Windows
 game on Apple Silicon Macs through Wine. Developed with AI assistance and local
 testing. Independent of Innova and NCSoft.
 
-## Video demos
+## New milestone: sound and performance
+
+**21 November 2026 — sound is back in the official client, and C4 became playable.**
+
+Pinned **x87sidecar v1.9.1 + Metal** allowed the maintainer to restore audible
+sound with responsive world interaction in the official 4game client. A separately
+downloaded C4 client also worked with sound: about **66 FPS at login**, versus
+earlier samples near 10, and **30–50 FPS reported in-world after increasing
+quality and view distance**. These are local observations, not a controlled
+6.5× speedup benchmark. **Official-client Reconnect still recurs after about
+1–2 minutes.**
+
+[![Official client world interaction with x87sidecar and Metal](docs/experiments/2026-11-21-x87-audio/official-gameplay.png)](docs/experiments/2026-11-21-x87-audio/official-gameplay-10s.mp4)
+
+[Official gameplay, 10 seconds](docs/experiments/2026-11-21-x87-audio/official-gameplay-10s.mp4) ·
+[C4 gameplay, 10 seconds](docs/experiments/2026-11-21-x87-audio/c4-gameplay-10s.mp4) ·
+[Results, screenshots and opt-in instructions](docs/experiments/2026-11-21-x87-audio/README.md).
+The clips are normal-speed and silent because their source recordings contain
+no audio tracks. Audible playback was confirmed separately by the maintainer.
+
+For an existing Metal source setup, close its launcher/game, then run
+`python3 x87_audio.py` and `./dev run`. The command checks pinned downloads,
+Rosetta compatibility, actual cooperative attachment, Metal and audio before
+activation. `python3 x87_audio.py --disable` restores the earlier audio-disabled
+mode. Fresh setup keeps its previous default until this explicit opt-in.
+
+## Earlier video demos
 
 **21 November 2026 — several minutes of world interaction, with Reconnect still unresolved.**
 
@@ -64,7 +90,7 @@ for editing, rebuilding, and submitting changes.
 | Sustained gameplay | Still to be verified |
 | Fresh setup through game launch on another Mac | Still to be verified |
 | Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
-| Rendering and performance | Metal with audio output disabled substantially improved local responsiveness. Stalls, incorrect materials and Reconnect remain; no controlled average-FPS speedup is claimed. |
+| Rendering, performance and sound | Metal + x87sidecar restored audible sound with responsive interaction in the local official-client trial; C4 also became playable. Reconnect remains. [New results](docs/experiments/2026-11-21-x87-audio/README.md). No controlled average-FPS speedup is claimed. |
 
 **Texture issue [#2](https://github.com/deusmarsh/unnoficial-relay-l2/issues/2) remains open.**
 The OpenGL baseline showed dark models; the later Metal sessions still show
@@ -101,7 +127,7 @@ Wine window with native window controls, using the tested Chromium `in-process-g
 configuration. It avoids capturing, encoding and displaying a stream of screenshots.
 Account login, downloads and Play remain in the official launcher. New source setups render the game
 in its own window through Direct3D 9 → mtld3d → Metal, with Wine audio output disabled.
-Older configured installations retain their previous renderer and audio settings.
+The optional `x87_audio.py` activation enables pinned x87sidecar and sound on an existing Metal source setup. Older configured installations retain their previous renderer and audio settings.
 
 After closing the official launcher, `./dev run --relay` selects the previous screenshot
 display as a fallback. For a packaged app, use `open -a "Lineage II Launcher" --args --relay`.

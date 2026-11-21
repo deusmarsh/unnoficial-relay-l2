@@ -137,7 +137,7 @@ def check():
     if os.environ.get('LINEAGE_TEST_SWIFT') == '1':
         env['LINEAGE_TEST_SWIFT'] = '1'
     subprocess.run([sys.executable, '-B', '-m', 'unittest', '-v',
-                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher', 'test_game_fonts', 'test_updater_ca', 'test_metal_runtime'],
+                    'test_installer', 'test_bundle', 'test_dev', 'test_launcher', 'test_game_fonts', 'test_updater_ca', 'test_metal_runtime', 'test_x87_audio'],
                    cwd=ROOT, env=env, check=True)
     print('Portable checks passed. This does not establish game rendering or gameplay.')
 
