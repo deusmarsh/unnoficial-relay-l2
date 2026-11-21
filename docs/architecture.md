@@ -13,7 +13,7 @@ Develop.command / dev -> dev.py
              run_stock_launcher.py -> official launcher in a direct Wine window
              launcher_startup.py -> bounded splash recovery over localhost:8088
              --relay: localhost:8088 <-> NativeFrameRelay.swift (frames and input)
-             official Play -> game -> Direct3D 9 -> WineD3D -> OpenGL
+             official Play -> game -> Direct3D 9 -> mtld3d -> Metal (new setups, no audio)
   check -> offline boundary tests
 ```
 
@@ -25,6 +25,8 @@ Develop.command / dev -> dev.py
 - `SetupWizard.swift`: setup progress, confirmations, cancellation and handoff.
 - `install.py`, `dependencies.json`, `prepare_net3132.py`: verified dependency
   acquisition, source builds, .NET preparation, prefix checks and activation.
+- `metal_runtime.py`, `runtime_environment.py`: pinned Metal runtime build,
+  prefix renderer install, shared audio-disabled environment and hardware probes.
 - `NativeFrameRelay.swift`: direct launch handoff, plus fallback frame windows and input.
 - `start_native_frame_relay.py`, `run_stock_launcher.py`: launcher connection and
   prefix-scoped process handling. Port 8088 is local and controls authenticated pages.
@@ -45,7 +47,7 @@ Develop.command / dev -> dev.py
 
 `4gameRelay.app`, `.build/`, `.local/`, `.local-rebuild-*/`, `logs/`,
 `config.local.json` and `dist/` are local. The source setup normally keeps its
-runtime/prefix under `.local/` and its active config at the checkout root. The
+runtime/prefix under `.local-metal-v1/` and its active config at the checkout root. The
 packaged app uses Application Support instead. `dev` clears inherited LINEAGE_*
 overrides so it uses this checkout's source paths.
 

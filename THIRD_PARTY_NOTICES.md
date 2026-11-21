@@ -52,3 +52,19 @@ Its SHA-256 DER fingerprint is
 `96BCEC06264976F37460779ACF28C5A7CFE8A3C0AAE11A8FFCEE05C0BDDF08C6`.
 It supplements the updater's local CA file without changing OS trust stores or
 disabling certificate verification.
+
+## Metal source setup
+
+The default source setup additionally downloads Highball Wine 11.0 from
+https://github.com/gauthierpiarrette/highball-engine/releases/tag/engine-wine-11.0-20261114T185735Z-fiber-mirror-switch
+and mtld3d v0.15.5 from https://github.com/athei/mtld3d/releases/tag/v0.15.5 .
+The matching CrossOver 26.3.0 open-source archive comes from
+https://media.codeweavers.com/pub/crossover/source/crossover-sources-26.3.0.tar.gz .
+The Wine-derived kernel is built locally with the existing LGPL synchronization
+patches. Highball's downloaded engine, frameworks and notices are retained locally.
+The source release does not redistribute their runtime binaries.
+
+mtld3d is copyright 2026 Alexander Theissen under the zlib license; its notice is
+retained in licenses/MTLD3D-LICENSE and in the downloaded renderer archive.
+Its source is https://github.com/athei/mtld3d . All three downloads are hash-pinned
+in dependencies.json. The older Sikarugir inputs remain for legacy standalone builds.

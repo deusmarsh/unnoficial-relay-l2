@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-21",
+  "hardware": "Apple M1 Pro, macOS 27",
+  "scope": "New source-created runtime and prefix; no active configuration replacement",
+  "dependencies": "Pinned cached upstream archives verified before extraction",
+  "guarded_mutex": "GUARDED_MUTEX_OK blocked_waiter=1 threads=4 iterations=4000 overlaps=0",
+  "dotnet_runtime": "Microsoft.NETCore.App 3.1.32",
+  "metal_32bit": "driver=mtld3d adapter=Apple M1 Pro; D3D9 device creation and presentation passed",
+  "active_render_endpoints": 0,
+  "probe_result": "METAL_AUDIO_OK",
+  "not_verified": [
+    "Independent network download",
+    "Publisher installer completion",
+    "Account sign-in",
+    "Game download and world entry in the new prefix",
+    "Sustained gameplay",
+    "Standalone Metal packaging"
+  ],
+  "offline_tests": {
+    "run": 59,
+    "passed": 56,
+    "skipped": 3,
+    "result": "OK"
+  },
+  "source_packaging": "83 allowlisted files; no runtimes, accounts, raw logs or game binaries",
+  "normal_setup_prepare_only": "Passed via install.py --gui --prepare-only; active configuration unchanged"
+}

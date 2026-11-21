@@ -1,6 +1,16 @@
 # Status and experiments
 
-## Latest local experiment — 20 November 2026
+## Current status — 21 November 2026
+
+PR [#11](https://github.com/deusmarsh/unnoficial-relay-l2/pull/11) integrates the
+Metal/audio-disabled configuration into new source setups. The latest recording
+shows world returns and interaction lasting over two minutes, followed by
+Reconnect. Materials remain incorrect. Fresh-prefix hardware probes passed;
+publisher installation through world entry in that new prefix is still unverified.
+See the [setup report](experiments/2026-11-21-metal-default/README.md) and
+[rendering investigation summary](#rendering-attempts-and-open-issues--21-november-2026).
+
+## Earlier local experiment — 20 November 2026
 
 A separate Highball/Wine 11 + mtld3d/Metal test copy became usable for walking,
 camera movement and UI interaction after disabling its audio output driver.
@@ -220,3 +230,72 @@ about 0.4 FPS on the intro, while a simple D3D9 triangle/font test reached about
 120 FPS. That synthetic test does not establish game compatibility. No Vulkan
 runtime, DXVK deployment or game rendering change is included here. Further game
 performance investigation was deferred.
+
+
+## Reproducible Metal/audio-disabled source setup — 21 November 2026
+
+The source installer now prepares pinned Highball Wine 11.0, mtld3d v0.15.5 and
+the CrossOver 26.3.0 guarded-mutex rebuild in a new dedicated directory. Setup and
+launch share the audio-disabled environment. On M1 Pro the fresh-prefix checks
+passed: mutex stress, .NET 3.1.32, a 32-bit mtld3d D3D9 device and presentation,
+and zero active playback endpoints. No publisher login or gameplay in that new
+prefix has been verified yet.
+
+The latest 5:52 recording from the existing test environment preserves two world
+returns, movement for over two minutes, and the remaining Reconnects.
+[Recipe, validation and published full video](experiments/2026-11-21-metal-default/README.md).
+
+![Latest session returns, movement and final Reconnect](experiments/2026-11-21-metal-default/transitions.png)
+
+*Original review contact sheet; video seconds are not a controlled FPS benchmark.
+The recording predates the new source-created prefix.*
+
+## Rendering attempts and open issues — 21 November 2026
+
+The following consolidates the documented trials on Apple M1 Pro, 16 GB,
+macOS 27.0. Different runtimes and scenes prevent a controlled renderer comparison.
+
+| Attempt | Observed result | Conclusion and limits |
+| --- | --- | --- |
+| Wine 10 / WineD3D / OpenGL baseline | World loaded, but dark character/NPC models, missing text and severe stalls remained. | World entry alone did not validate materials or sustained play. |
+| Physical Arial/Tahoma files in the prefix | Native UI captions and dialogs became readable in the same renderer. | Local text repair succeeded; dark models remained. This is separate from texture issue #2. |
+| Vulkan support and isolated DXVK/MoltenVK trial | Vulkan availability did not remove the reported issues. The isolated game intro ran at about 0.4 FPS; a simple D3D9 triangle/font probe reached about 120 FPS. | The synthetic result did not establish game compatibility or a material fix. |
+| Highball Wine 11.0 / mtld3d 0.15.5 / Metal | Character screens could animate; world entry/loading still suffered severe pauses with audio output available. | Switching renderer alone did not establish usable sustained gameplay or correct materials. |
+| Same Metal test environment, `winecoreaudio.drv=d` | Playback endpoints changed from 1 to 0. Walking, camera control and windows became usable; selected HUD snapshots were 14.42–29.39 FPS. Later video shows two returns lasting over two minutes each. | Local responsiveness improved; snapshots are not average FPS. White/blue materials, stalls and Reconnect remain. Exact audio fault is unproven. |
+| PR #11 source integration | Pinned runtime build, mutex/.NET/32-bit Metal presentation and zero-playback-endpoint probes passed in a fresh prefix. | Reproduces configuration preparation; fresh publisher installation and gameplay are still unverified. |
+
+### Preserved visual evidence
+
+![Earlier OpenGL world with readable UI and dark models](font-ui-restored.png)
+
+*18 November font-repair recording: readable statistics and captions, with dark
+models still visible. This is historical evidence, not a matched Metal baseline.*
+
+![Later Metal session with interactive world windows](experiments/2026-11-20-audio-output/world-windows.png)
+
+*20 November Metal/audio-disabled recording, second 110: interactive windows;
+incorrect character materials persist. The scene differs from the earlier frame.*
+
+The [21 November contact sheet and full recording](experiments/2026-11-21-metal-default/README.md#latest-gameplay-evidence)
+preserve later interaction and the remaining Reconnects. Original repository images
+and linked release videos remain accessible; these are observed trials, not simulations.
+
+### Remaining work and closure criteria
+
+- [#2: textures/model colors](https://github.com/deusmarsh/unnoficial-relay-l2/issues/2)
+  stays open. Identify the failing material/rendering path and compare the same
+  character, camera, scene and settings against an independently verified expected
+  appearance. A change from dark to white/blue is not a fix.
+- [#4: pauses](https://github.com/deusmarsh/unnoficial-relay-l2/issues/4)
+  stays open. Measure repeatable pause durations and frame times; repeat the audio
+  comparison, including an audio-enabled reversal. Usable input is progress, not
+  proof that all stalls are gone.
+- [#9: Reconnect](https://github.com/deusmarsh/unnoficial-relay-l2/issues/9)
+  stays open. Capture the first failure and verify sustained connection separately.
+  A correct 2026 dialog timestamp did not prevent a disconnect.
+
+PR #11 is a configuration integration with these limitations. A future material
+fix should use a focused PR referencing #2 and include comparable screenshots;
+the existing issue already tracks the work, so no duplicate issue or speculative
+fix PR is needed. See the detailed [audio comparison](experiments/2026-11-20-audio-output/README.md)
+for provenance, method and confounders.

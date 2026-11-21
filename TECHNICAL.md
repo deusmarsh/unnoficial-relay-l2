@@ -40,7 +40,7 @@ Requires Xcode Command Line Tools and Python 3. The optional WPF window helper n
 
 ## Runtime and rendering
 
-The tested environment uses Sikarugir Wine 10 with a locally built Wine kernel synchronization backport and support libraries from the pinned Wine development package. The official WPF installer is extracted and prepared with Microsoft .NET Core 3.1.32 while preserving its WindowsDesktop assemblies. This is a legacy, experimental runtime combination.
+New source setups use the pinned Highball x86-64 Wine 11.0 engine, mtld3d v0.15.5, and a guarded-mutex module rebuilt from the pinned CrossOver 26.3.0 sources. Support libraries still come from the pinned Wine development package. `metal_runtime.py` builds the runtime and installs both 32-bit and 64-bit native d3d9 DLLs and mtld3d markers after wineboot. Per-game overrides select native d3d9 for L2.exe and L2.bin only. `runtime_environment.py` supplies the same environment during setup and launch: `winecoreaudio.drv=d`, `color.hdr.enable=false`, `shader.asyncCompile=false`, and the downloaded runtime framework path. Audio is disabled only inside this configured Wine environment. The official WPF installer is extracted and prepared with Microsoft .NET Core 3.1.32 while preserving its WindowsDesktop assemblies. This is a legacy, experimental runtime combination.
 
 The default display is the official launcher's direct Wine window. Its Chromium
 switches disable GPU rendering/compositing and accelerated video decode, fix scale
@@ -58,9 +58,10 @@ seconds plus bounded connection timeouts; the official window stays open if load
 has not finished. Reopening an existing direct launcher neither reloads its page nor
 restarts its updater or game. Concurrent startup requests are serialized.
 
-The game still renders separately through Direct3D 9 → WineD3D → OpenGL. No Vulkan,
-DXVK, graphics DLL override or game preference change is part of this improvement.
-It does not fix the game's rendering errors or stuttering.
+The game renders separately through Direct3D 9 → mtld3d → Metal in new setups.
+The existing Sikarugir/OpenGL configuration and the older packaged preview are
+preserved for existing users. Reconnects and material defects remain. No FPS
+speedup ratio or sustained-play guarantee is inferred from the recorded sessions.
 
 After closing the official launcher, `./dev run --relay` selects the legacy native
 Mac screenshot display. That mode retains frame/input handling, the hide timer and
@@ -113,7 +114,9 @@ The ZIP uses an explicit file list. Original code/icons are MIT; Wine patches ar
 
 ## Standalone app distribution
 
-The maintainer runs `python3 build_bundle.py` after preparing the source-built runtime. The builder embeds a relocatable ARM Python distribution, .NET runtime archive, stripped Wine kernel and macOS-driver modules, precompiled Windows helpers, icons, source and notices. It does not package a Wine prefix, account, existing config, launcher binary or game installation.
+The legacy standalone builder requires an older Wine 10 prepared runtime; it
+explicitly rejects a Metal prepared directory. The source workflow is the current
+Metal installation path. For the older preview, the maintainer runs `python3 build_bundle.py`. The builder embeds a relocatable ARM Python distribution, .NET runtime archive, stripped Wine kernel and macOS-driver modules, precompiled Windows helpers, icons, source and notices. It does not package a Wine prefix, account, existing config, launcher binary or game installation.
 
 Wine's full engine and support package are fetched from pinned upstream downloads on first launch rather than rehosted without their complete corresponding-source material. The shipped Wine module has its Wine 10 source archive, LGPL text, patches and build recipe included. Python's dependency notices and build metadata are retained from the corresponding full upstream build.
 

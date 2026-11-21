@@ -5,6 +5,13 @@ windows and drag them.** A screen recording confirms changing player positions,
 camera views and UI panels for roughly 95 seconds before another Reconnect.
 This is a substantial local responsiveness improvement, not stable gameplay yet.
 
+**21 November follow-up:** PR [#11](https://github.com/deusmarsh/unnoficial-relay-l2/pull/11)
+adds this runtime/audio configuration to new source setups. The historical trial
+below remains evidence from a manually prepared test copy. Fresh-prefix gameplay
+is unverified, and textures, pauses and Reconnect remain open. See the
+[consolidated investigation](../../experiments.md#rendering-attempts-and-open-issues--21-november-2026)
+and [new setup report with screenshots](../2026-11-21-metal-default/README.md).
+
 
 ## Video recordings
 

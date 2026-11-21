@@ -42,7 +42,8 @@ need the maintainer's chat history. Instructions and commands are shared with hu
 
 - Preserve separation: direct Wine display is the launcher default; relay frames
   are a fallback for launcher UI. The game renders separately
-  through WineD3D/OpenGL. A faster relay is not evidence of faster game rendering.
+  through mtld3d/Metal in new source setups with Wine audio output disabled.
+  Older configured installations retain WineD3D/OpenGL. A faster relay is not evidence of faster game rendering.
 - Keep runtime changes inside the configured project prefix. Do not kill all Wine
   processes, edit another installation or silently switch the active environment.
 - Source setup and packaged setup share concepts but have different build paths.

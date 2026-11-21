@@ -5,6 +5,12 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent
 FILES = (
+    'docs/experiments/2026-11-21-metal-default/README.md',
+    'docs/experiments/2026-11-21-metal-default/video.json',
+    'docs/experiments/2026-11-21-metal-default/validation.json',
+    'docs/experiments/2026-11-21-metal-default/transitions.png',
+    'docs/experiments/2026-11-21-metal-default/video-release-draft.jpg',
+    'metal_runtime.py', 'runtime_environment.py', 'MetalAudioProbe.c', 'test_metal_runtime.py', 'licenses/MTLD3D-LICENSE',
     'dev', 'dev.py', 'Develop.command', 'test_dev.py', 'AGENTS.md', 'CONTRIBUTING.md',
     'docs/alpha-login.jpg', 'docs/font-ui-restored.png', 'docs/gludio-world-entry.jpg', 'docs/character-selection.jpg', 'docs/world-loading.jpg', 'docs/architecture.md', 'docs/experiments.md', 'docs/deferred-icons.md',
     'docs/experiments/2026-11-20-audio-output/README.md',

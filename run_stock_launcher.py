@@ -84,15 +84,8 @@ def launch(args, config, prefix, install, host, command, switch, switch_name, lo
     direct = args.display == 'direct'
     prepare_game_fonts(prefix)
     prepare_updater_ca(install / 'bin')
-    env = os.environ.copy()
-    # A launch must use the configured environment, not an inherited graphics test.
-    for key in list(env):
-        if key.startswith(('WINE', 'DXVK_', 'MVK_', 'VK_', 'DYLD_')):
-            env.pop(key)
-    env.update(WINEPREFIX=str(prefix),
-               DYLD_FALLBACK_LIBRARY_PATH=':'.join(str(Path(item).expanduser().resolve()) for item in config['library_paths']) + ':/usr/local/lib:/usr/lib',
-               WINEDLLOVERRIDES='winemenubuilder.exe=d;winedbg.exe=d',
-               DOTNET_MULTILEVEL_LOOKUP='0', WINEDEBUG='-all,err+all')
+    from runtime_environment import wine_environment
+    env = wine_environment(config)
     tasks = running_images(host, env)
     restarting = args.restart or args.finish_setup
     if restarting and tasks.intersection({'l2.exe', '4updater.exe'}):
