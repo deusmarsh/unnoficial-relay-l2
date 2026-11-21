@@ -92,11 +92,13 @@ for editing, rebuilding, and submitting changes.
 | Native game UI text | Restored locally with physical Arial/Tahoma files; setup and launcher startup now prepare missing files. |
 | Rendering, performance and sound | Metal + x87sidecar restored audible sound with responsive interaction in the local official-client trial; C4 also became playable. Reconnect remains. [New results](docs/experiments/2026-11-21-x87-audio/README.md). No controlled average-FPS speedup is claimed. |
 
-**Texture issue [#2](https://github.com/deusmarsh/unnoficial-relay-l2/issues/2) remains open.**
-The OpenGL baseline showed dark models; the later Metal sessions still show
-white/blue material defects. Font preparation restored text, and disabling Wine
-audio output improved local interaction, but neither establishes correct materials.
-See the [attempts and remaining work](docs/experiments.md#rendering-attempts-and-open-issues--21-november-2026).
+**Character-material correction:** the observed white/cyan corruption in the
+local official-client Metal trial was fixed by a downstream mtld3d shader patch.
+[Before/after screenshots and source-build instructions](docs/experiments/2026-11-21-material-fix/README.md).
+For an existing Metal source setup with the pinned Rust tools, close the
+launcher/game, run `python3 material_fix.py`, then `./dev run`. This builds into a
+separate runtime copy and preserves the current audio/x87 selection. New setup
+retains the stock renderer until explicit activation. Reconnect remains unresolved.
 
 Status updated 21 November 2026. These are results from the maintainer’s existing
 installation, not a fresh-install or sustained-play guarantee. The GitHub checks

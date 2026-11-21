@@ -1,5 +1,21 @@
 # Status and experiments
 
+## Official-client material correction — 21 November 2026
+
+A downstream mtld3d DXSO emitter patch corrected the observed white/cyan Warg
+materials in the official client. The local captured draw changed from 4,469
+invalid RGB vertices to zero, followed by official-client visual acceptance.
+[Original before/after images, patch, build/activation and limits](experiments/2026-11-21-material-fix/README.md).
+
+![Official Warg material comparison](experiments/2026-11-21-material-fix/before-after.png)
+
+*Actual sessions, different poses/UI; qualitative material evidence, not an FPS
+comparison. Original screenshots are linked in the report.*
+
+`python3 material_fix.py` builds the published patch and activates a separate
+runtime copy in an existing Metal source installation. The earlier statements
+below about issue #2 reflect the pre-fix investigation. Reconnect #9 remains.
+
 ## Sound restored with x87sidecar — 21 November 2026
 
 The official client now has a positive audio-enabled trial with x87sidecar:

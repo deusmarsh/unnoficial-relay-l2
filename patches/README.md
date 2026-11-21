@@ -20,3 +20,11 @@ The installer downloads a pinned Wine source archive, applies the patches and bu
 `winemac-background-app.patch` adapts Wine 10's macOS driver. The per-executable `Mac Driver\LineageBackgroundApp` option prevents opted-in services from promoting themselves into Dock applications. It is enabled for Inn.games.exe, Launcher.exe, explorer.exe, CefSharp.BrowserSubprocess.exe and our window helper. L2.exe, Frost and installer dialogs do not opt in. The driver remains LGPL-2.1-or-later; its original copyright notices are retained.
 
 The maintainer builds the Mac driver with `install.build_background_driver`; `build_bundle.py` embeds its stripped binary alongside the synchronization module, with this patch, the pinned Wine 10 source archive and the build recipe. A foreground game launch must be checked separately from the launcher-only Dock test.
+
+## mtld3d-zero-multiply.patch
+
+Downstream alteration of athei/mtld3d v0.15.5 (zlib), not a Wine patch.
+Preserves zero contributions in DXSO MUL/MAD with non-finite operands and adds
+vertex/pixel emitter regression checks. Applied only by `material_fix.py` to
+hash-verified source, then built into a separate runtime copy. See the
+[official-client comparison and limits](../docs/experiments/2026-11-21-material-fix/README.md).

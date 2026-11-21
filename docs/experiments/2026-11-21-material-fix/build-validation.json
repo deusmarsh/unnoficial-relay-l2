@@ -1,0 +1,68 @@
+{
+  "upstream": "mtld3d v0.15.5",
+  "patch_sha256": "20c4aeb3c76a411c421d03cd23b0750a9879a927260c0ef75ab244ee2b4b68d7",
+  "native_sha256": "57f54ef65cac49006c6254fd3c9027d68fe8fa444f0da723fa45643b2e89a041",
+  "core_and_unix_tests": "passed",
+  "production_assert_gate": "passed",
+  "real_metal_present": "passed",
+  "original_runtime_modified": false,
+  "exports_match": true,
+  "gpu_arithmetic_lanes_passed": 24,
+  "portable_tests": {
+    "run": 68,
+    "passed": 65,
+    "skipped": 3
+  },
+  "renderer_test_summaries": [
+    [
+      "2247",
+      "0"
+    ],
+    [
+      "3",
+      "0"
+    ],
+    [
+      "4",
+      "0"
+    ],
+    [
+      "0",
+      "0"
+    ],
+    [
+      "0",
+      "0"
+    ],
+    [
+      "93",
+      "0"
+    ],
+    [
+      "270",
+      "2"
+    ],
+    [
+      "108",
+      "0"
+    ],
+    [
+      "378",
+      "0"
+    ],
+    [
+      "0",
+      "0"
+    ],
+    [
+      "0",
+      "0"
+    ]
+  ],
+  "manual_game_acceptance": "Original downstream patch accepted in official client; current helper has a real Metal presentation check, not a fresh gameplay session.",
+  "rollback_preserves_x87_audio": true,
+  "public_source_download_sha256_verified": true,
+  "core_types_tests_passed": 2254,
+  "unix_tests_passed": 849,
+  "unix_tests_ignored": 2
+}

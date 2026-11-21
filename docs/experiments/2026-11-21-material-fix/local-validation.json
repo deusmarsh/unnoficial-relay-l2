@@ -1,0 +1,27 @@
+{
+  "core_tests_passed": 2254,
+  "unix_tests_passed": 849,
+  "unix_tests_ignored": 2,
+  "gpu_arithmetic_lanes_passed": 24,
+  "patched_emitter_replay_invalid_color_vertices": 0,
+  "patch_applies_to_pristine_v0155": true,
+  "format": "make fmt with nightly-2026-10-11",
+  "native_clippy": "both workspaces passed with warnings denied",
+  "source_audit": "both changed Rust files passed",
+  "production_assert_gate": "passed",
+  "limits": [
+    "Full Windows PE build, Wine end-to-end suite and conformance suite not run: this experiment rebuilds the native x86-64 component only, against an existing runtime-only Highball tree.",
+    "Live acceptance covers character selection and sampled character-creation scenes, not sustained play in the game world.",
+    "Disconnect dialog reported after capture remains unresolved; no causal attribution or performance benchmark."
+  ],
+  "official_client_acceptance": {
+    "status": "passed for observed material defect",
+    "warg": "Full character in user screenshot at 15:11:51; normal face, hair, armor, cloth and boots.",
+    "creation": "Reviewed 48.0117-second video sampled every two seconds; Samurai, Warg, Elf, Dark Elf, Orc, Dwarf and Ertheia scenes. No matching white/cyan corruption in loaded models.",
+    "gpu_trace": "Ertheia creation frame extracted from patched official client GPU trace.",
+    "loaded_so_uuid": "CB416DC4-91B5-357E-9479-64FB1D26DA9F",
+    "cached_dxso_variants_regenerated": 440,
+    "comparison": "before-after.png"
+  },
+  "provenance": "Earlier local material-fix acceptance, 21 November 2026; final publication helper validation is recorded separately."
+}

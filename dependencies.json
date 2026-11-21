@@ -75,5 +75,12 @@
     "file": "x87sidecar.tar.xz",
     "sha256": "e18d1c2443f1440ae5a8e137dd0c85ec33e53506b67604675826094122106615",
     "binary_sha256": "b284e879b7bff3d10f152cbfff8f04abe13de59d63036c962e732ef4913e84f4"
+  },
+  "metal_renderer_source": {
+    "url": "https://github.com/athei/mtld3d/archive/refs/tags/v0.15.5.tar.gz",
+    "file": "mtld3d-v0.15.5-source.tar.gz",
+    "sha256": "0de8c2de9156dae00e68b0f0bba27cdda7e1af6072f7740af8b764379e9ab9b6",
+    "rust_stable": "1.99.0",
+    "rust_nightly": "nightly-2026-10-11"
   }
 }
