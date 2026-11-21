@@ -100,3 +100,25 @@ The existing installation reached Gludio, and a later two-file font repair resto
 native UI text. Sustained play remains unverified. A separate source-based clean runtime build passed Windows, .NET-host and mutex checks and opened the publisher's agreement window. The standalone bundle is tested separately from a relocated copy with a new data directory, no original cache and access to the development workspace denied. The manual handoff is the first agreement window: no publisher terms or account login are accepted by automation.
 
 See the [alpha status](README.md#alpha-status) for the current gameplay baseline.
+
+## Optional x87 acceleration and sound
+
+After completing the existing Metal source setup, close its launcher and game:
+
+```sh
+python3 x87_audio.py
+./dev run
+```
+
+This downloads pinned x87sidecar v1.9.1, verifies both hashes, probes Rosetta and
+requires real cooperative attachment, 32-bit Metal presentation and an active
+audio endpoint before activation. It preserves the existing prefix and game.
+Configuration backups are under `.build/x87-audio-backups/`. For an offline
+verified cache, pass `--archive /path/to/x87sidecar.tar.xz`.
+
+To restore the earlier Metal/audio-disabled mode, close the launcher/game and
+run `python3 x87_audio.py --disable`. Existing configurations and fresh setup
+remain unchanged until explicit activation. The legacy standalone/DMG builder
+is not covered. The command verifies hardware/runtime setup, not a fresh game
+installation or sustained gameplay; Reconnect still recurs in official-client
+trials. [Evidence and limits](docs/experiments/2026-11-21-x87-audio/README.md).

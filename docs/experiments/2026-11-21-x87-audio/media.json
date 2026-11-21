@@ -1,0 +1,42 @@
+{
+  "exports": [
+    {
+      "file": "official-gameplay-10s.mp4",
+      "sha256": "7239a86d9ae137c0be09222f06c1c08bf3f132edd29e5855f79e4170b6f40b7d",
+      "duration_seconds": 9.966667,
+      "source_range_seconds": [
+        5,
+        15
+      ],
+      "playback_speed": "1x",
+      "audio_tracks": 0,
+      "notes": "720p/30fps viewing export. Source capture contains no audio; no sound was removed or added.",
+      "requested_duration_seconds": 10
+    },
+    {
+      "file": "c4-gameplay-10s.mp4",
+      "sha256": "203c745c1bdcd63ff65e6d77af52eaa7aab9ecdc9788d6bfeb3dcb76e247c8e4",
+      "duration_seconds": 10,
+      "source_range_seconds": [
+        5,
+        15
+      ],
+      "playback_speed": "1x",
+      "audio_tracks": 0,
+      "notes": "720p/30fps viewing export. Source capture contains no audio; no sound was removed or added."
+    }
+  ],
+  "sources": [
+    {
+      "recording": "Official client capture, 21 November 2026",
+      "duration_seconds": 39.115,
+      "audio_tracks": 0
+    },
+    {
+      "recording": "Separate C4 client capture, 21 November 2026",
+      "duration_seconds": 36.4633333333,
+      "audio_tracks": 0
+    }
+  ],
+  "retention": "Original recordings and extracted review frames preserved locally. Only selected screenshots and 10-second excerpts are published."
+}

@@ -1,4 +1,4 @@
-/* Original project smoke test: 32-bit Metal device and disabled audio endpoints. */
+/* Original project smoke test: 32-bit Metal and optional x87/audio activation. */
 #define INITGUID
 #define COBJMACROS
 #include <windows.h>
@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(void) {
+int main(int argc, char **argv) {
+    int audio = argc == 2 && !strcmp(argv[1], "--audio-enabled");
     IMMDeviceEnumerator *enumerator = NULL;
     IMMDeviceCollection *devices = NULL;
     UINT count = 99;
@@ -23,7 +24,13 @@ int main(void) {
     IMMDeviceEnumerator_Release(enumerator);
     CoUninitialize();
     printf("active_render_endpoints=%u\n", count);
-    if (FAILED(hr) || count != 0) return 4;
+    if (FAILED(hr) || (audio ? count == 0 : count != 0)) return 4;
+    if (audio) {
+        double angle = 0.5, sine = 0;
+        __asm__ volatile("fldl %1; fsin; fstpl %0" : "=m"(sine) : "m"(angle) : "st");
+        if (!(sine > 0.47942553860419 && sine < 0.47942553860422)) return 10;
+        printf("x87_sine=%.17g\n", sine);
+    }
     IDirect3D9 *d3d = Direct3DCreate9(D3D_SDK_VERSION);
     if (!d3d) return 5;
     D3DADAPTER_IDENTIFIER9 adapter;
@@ -44,6 +51,6 @@ int main(void) {
     if (SUCCEEDED(hr)) hr = IDirect3DDevice9_Present(device, NULL, NULL, NULL, NULL);
     IDirect3DDevice9_Release(device); IDirect3D9_Release(d3d); DestroyWindow(window);
     if (FAILED(hr)) return 9;
-    puts("METAL_AUDIO_OK");
+    puts(audio ? "X87_AUDIO_OK" : "METAL_AUDIO_OK");
     return 0;
 }

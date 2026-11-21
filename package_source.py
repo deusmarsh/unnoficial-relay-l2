@@ -5,6 +5,16 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent
 FILES = (
+    'docs/experiments/2026-11-21-x87-audio/README.md',
+    'docs/experiments/2026-11-21-x87-audio/media.json',
+    'docs/experiments/2026-11-21-x87-audio/validation.json',
+    'docs/experiments/2026-11-21-x87-audio/official-gameplay.png',
+    'docs/experiments/2026-11-21-x87-audio/c4-world-low-detail.png',
+    'docs/experiments/2026-11-21-x87-audio/c4-world-higher-detail.png',
+    'docs/experiments/2026-11-21-x87-audio/official-reconnect.png',
+    'docs/experiments/2026-11-21-x87-audio/official-gameplay-10s.mp4',
+    'docs/experiments/2026-11-21-x87-audio/c4-gameplay-10s.mp4',
+    'x87_audio.py', 'test_x87_audio.py', 'licenses/X87SIDECAR-LICENSE',
     'docs/experiments/2026-11-21-metal-default/README.md',
     'docs/experiments/2026-11-21-metal-default/video.json',
     'docs/experiments/2026-11-21-metal-default/validation.json',

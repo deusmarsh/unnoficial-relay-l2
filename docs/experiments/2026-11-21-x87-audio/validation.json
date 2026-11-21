@@ -1,0 +1,18 @@
+{
+  "sidecar_version": "v1.9.1",
+  "rosetta_supported": true,
+  "cooperative_hook_confirmed": true,
+  "metal_d3d9_present": true,
+  "active_audio_endpoint": true,
+  "x87_numeric_check": true,
+  "gameplay_checked_by_this_command": false,
+  "source_tests": {
+    "run": 64,
+    "passed": 61,
+    "skipped": 3
+  },
+  "activation_and_disable_checked": true,
+  "source_runtime": "PR #11 pinned Highball/Wine 11.0 and stock mtld3d 0.15.5",
+  "gameplay_runtime_note": "Manual gameplay used the same engine and sidecar plus a locally patched mtld3d material fix; the activation helper does not install that material patch.",
+  "activation_implementation": "x87_audio.py opt-in with unchanged base source setup; default remains audio disabled"
+}

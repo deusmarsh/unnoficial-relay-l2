@@ -68,3 +68,12 @@ mtld3d is copyright 2026 Alexander Theissen under the zlib license; its notice i
 retained in licenses/MTLD3D-LICENSE and in the downloaded renderer archive.
 Its source is https://github.com/athei/mtld3d . All three downloads are hash-pinned
 in dependencies.json. The older Sikarugir inputs remain for legacy standalone builds.
+
+## Optional x87sidecar
+
+The explicit `x87_audio.py` opt-in downloads x87sidecar v1.9.1 from its official
+release, with pinned archive and executable SHA-256. It is not embedded in this
+source archive. Upstream: https://github.com/athei/x87sidecar.
+MIT license; copyright (c) 2025 Lifeisawful. The upstream notice is retained in
+[licenses/X87SIDECAR-LICENSE](licenses/X87SIDECAR-LICENSE).
+Game artwork in screenshots and video excerpts belongs to its respective owners.

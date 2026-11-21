@@ -1,5 +1,26 @@
 # Status and experiments
 
+## Sound restored with x87sidecar — 21 November 2026
+
+The official client now has a positive audio-enabled trial with x87sidecar:
+audible sound and responsive world interaction were confirmed by the maintainer.
+A separately downloaded C4 client showed about 66 FPS at login versus earlier
+samples near 10; after increasing graphics and view distance the maintainer
+reported roughly 30–50 FPS in-world. These are observations across different
+runs/settings, not a measured universal speedup. Official Reconnect remains.
+
+[Full report, activation/rollback, screenshots and two 10-second clips](experiments/2026-11-21-x87-audio/README.md).
+The video sources contain no audio tracks; sound was verified separately.
+
+![C4 world with the Metal HUD at 136.25 FPS in one reduced-detail scene](experiments/2026-11-21-x87-audio/c4-world-low-detail.png)
+
+*Original selected HUD snapshot, 960×600, not a session average or a matched
+baseline. See the report for the later higher-detail result and limitations.*
+
+The earlier reports below describe the audio-disabled workaround and remain
+historical evidence. This opt-in does not close pauses #4, Reconnect #9 or the
+separate materials investigation #2.
+
 ## Current status — 21 November 2026
 
 PR [#11](https://github.com/deusmarsh/unnoficial-relay-l2/pull/11) integrates the

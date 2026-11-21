@@ -68,5 +68,12 @@
     "url": "https://media.codeweavers.com/pub/crossover/source/crossover-sources-26.3.0.tar.gz",
     "file": "crossover-sources-26.3.0.tar.gz",
     "sha256": "ac99c8ca4b3848f3e81784135f023df266b61c2345726ea55a50b3e030dd6872"
+  },
+  "x87_sidecar": {
+    "version": "v1.9.1",
+    "url": "https://github.com/athei/x87sidecar/releases/download/v1.9.1/x87sidecar.tar.xz",
+    "file": "x87sidecar.tar.xz",
+    "sha256": "e18d1c2443f1440ae5a8e137dd0c85ec33e53506b67604675826094122106615",
+    "binary_sha256": "b284e879b7bff3d10f152cbfff8f04abe13de59d63036c962e732ef4913e84f4"
   }
 }
