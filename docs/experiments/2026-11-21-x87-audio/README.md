@@ -89,8 +89,7 @@ python3 x87_audio.py --disable
 ./dev run
 ```
 
-New setup and existing configurations retain their previous behavior until this
-explicit opt-in. This command is for the Metal **source** installation, not the
+New source setups now enable x87 audio automatically. The manual command also supports earlier Metal installations. This command is for the Metal **source** installation, not the
 legacy standalone/DMG builder or a C4 game downloader. No C4 files are distributed.
 
 ## Validation and provenance

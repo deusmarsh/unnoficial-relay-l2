@@ -83,6 +83,8 @@ class InstallerChecks(unittest.TestCase):
         with patch.object(setup.sys,'argv',['install.py','--plan']), patch.object(setup,'run',side_effect=AssertionError('No execution allowed')), contextlib.redirect_stdout(io.StringIO()) as output:
             setup.main()
         self.assertIn('official installer',output.getvalue())
+        for dependency in ('x87_sidecar', 'metal_renderer_source', 'rustup_init'):
+            self.assertIn(setup.MANIFEST[dependency]['url'], output.getvalue())
 
 if __name__ == '__main__':
     unittest.main()

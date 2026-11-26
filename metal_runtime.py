@@ -1,9 +1,10 @@
-"""Reproduce the recorded x86-64 Metal/audio-disabled runtime in a new prefix."""
+"""Reproduce the pinned x86-64 Metal runtime in a new prefix."""
 import hashlib
 import json
 import os
 from pathlib import Path
 import shutil
+import tempfile
 
 from runtime_environment import METAL_PROFILE
 
@@ -115,17 +116,50 @@ def install_prefix(config, setup):
                    '/d', 'native,builtin', '/f'], env=env, timeout=60)
 
 
-def smoke_test(work, config, setup):
-    """Verify the actual 32-bit D3D9 path and the absence of playback endpoints."""
-    compiler = Path(config['mingw_clang']).with_name('i686-w64-mingw32-clang')
-    probe = work / 'MetalAudioProbe.exe'
-    setup.run([compiler, setup.ROOT / 'MetalAudioProbe.c', '-O2', '-o', probe,
-               '-ld3d9', '-lole32', '-luuid'])
-    env = setup.wine_env(config)
-    env['WINEDLLOVERRIDES'] += ';d3d9=n,b'
-    result = setup.subprocess.run([config['wine'], str(probe)], env=env, stdout=setup.subprocess.PIPE,
-                                  stderr=setup.subprocess.STDOUT, text=True, timeout=90)
-    print(result.stdout, flush=True)
-    result.check_returncode()
-    if 'METAL_AUDIO_OK' not in result.stdout:
-        raise RuntimeError('Metal/audio smoke test did not report success; configuration was not activated.')
+def source_defaults(work, config, archives, setup):
+    """Stage the two validated components before Wine starts in a new setup."""
+    import material_fix
+    import x87_audio
+
+    audio = work / 'x87-audio'
+    audio.mkdir(exist_ok=True)
+    sidecar = audio / 'x87sidecar'
+    x87_audio.unpack_sidecar(archives['x87_sidecar'], sidecar)
+    config = dict(config, x87_audio={'sidecar': str(sidecar), 'version': x87_audio.dependency()['version']})
+
+    # The stock runtime stays available for material_fix.py --disable.
+    # Publish the clone and its identity together so interrupted builds can resume.
+    target = work / 'corrected-metal'
+    runtime = target / 'runtime'
+    manifest = setup.MANIFEST
+    recipe = {'base': config['runtime_identity'],
+              'source': manifest['metal_renderer_source'],
+              'patch': material_fix.sha(material_fix.ROOT / material_fix.PATCH)}
+    if not target.exists():
+        cargo = work / 'cargo'
+        rustup = work / 'rustup'
+        env = dict(os.environ, CARGO_HOME=str(cargo), RUSTUP_HOME=str(rustup))
+        installer = archives['rustup_init']
+        installer.chmod(0o755)
+        stable = manifest['metal_renderer_source']['rust_stable']
+        setup.run([installer, '-y', '--no-modify-path', '--profile', 'minimal',
+                   '--default-toolchain', stable, '--component', 'llvm-tools-preview',
+                   '--target', 'x86_64-apple-darwin'], env=env)
+        native = material_fix.build_library(config, work / 'material-build',
+                                             archives['metal_renderer_source'], cargo, rustup, test_tools=False)
+        with tempfile.TemporaryDirectory(dir=work) as tmp:
+            stage = Path(tmp) / 'corrected-metal'
+            stage.mkdir()
+            installed = material_fix.install_library(config, stage / 'runtime', native)
+            (stage / 'build.json').write_text(json.dumps({'recipe': recipe, 'sha256': material_fix.sha(installed)}))
+            stage.rename(target)
+    record = json.loads((target / 'build.json').read_text())
+    if record['recipe'] != recipe:
+        raise RuntimeError('The prepared material build has changed. Use a new setup work directory.')
+    native = runtime / 'lib/wine/x86_64-unix/mtld3d.so'
+    result = material_fix.candidate(config, runtime, native)
+    if result['material_fix']['native_sha256'] != record['sha256']:
+        raise RuntimeError('Prepared material renderer checksum mismatch.')
+    material_fix.verify_renderer(result)
+    x87_audio.verified_sidecar(result)
+    return result

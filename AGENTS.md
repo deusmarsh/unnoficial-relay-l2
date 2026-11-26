@@ -42,7 +42,7 @@ need the maintainer's chat history. Instructions and commands are shared with hu
 
 - Preserve separation: direct Wine display is the launcher default; relay frames
   are a fallback for launcher UI. The game renders separately
-  through mtld3d/Metal in new source setups with Wine audio output disabled.
+  through mtld3d/Metal in new source setups with corrected material shaders and x87 audio enabled.
   The explicit `python3 x87_audio.py` opt-in enables verified x87sidecar and sound
   on the existing Metal source profile. Older configured installations retain WineD3D/OpenGL. A faster relay is not evidence of faster game rendering.
 - Keep runtime changes inside the configured project prefix. Do not kill all Wine

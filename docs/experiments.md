@@ -1,5 +1,9 @@
 # Status and experiments
 
+## Official Innova EU client on macOS, 26 November 2026
+
+The maintainer confirmed a successful game launch with the x87 audio and Metal material corrections active. Enabling sound in the game settings restored audible playback. The maintainer reported smooth play throughout the session. FPS and character material appearance were not independently measured in this run. An earlier run reached the world and repeatedly offered a working Reconnect.
+
 ## Official-client material correction — 21 November 2026
 
 A downstream mtld3d DXSO emitter patch corrected the observed white/cyan Warg

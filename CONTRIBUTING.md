@@ -44,7 +44,7 @@ Useful commands:
 Review reports before sharing. Raw logs can contain account or machine information;
 do not attach them wholesale. Automated reports deliberately omit their contents.
 
-New source setups use the Metal/audio-disabled profile. Dependency URLs, hashes
+New source setups use corrected Metal shaders and x87 audio. Dependency URLs, hashes
 and synchronization patches contribute to its provenance identity. The first
 preparation also checks a real 32-bit Metal device and audio endpoints. See INSTALL.md.
 

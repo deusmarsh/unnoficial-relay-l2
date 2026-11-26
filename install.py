@@ -301,19 +301,19 @@ def prerequisites():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--gui', action='store_true', help=argparse.SUPPRESS)
-    parser.add_argument('--work-dir', type=Path, default=ROOT / '.local-metal-v1')
+    parser.add_argument('--work-dir', type=Path, default=ROOT / '.local-metal-audio-v2')
     parser.add_argument('--prepare-only', action='store_true', help='Download, build and smoke-test; do not open the official installer or activate this installation.')
     parser.add_argument('--plan', action='store_true', help='Show the recipe without downloading or changing anything.')
     parser.add_argument('--jobs',type=int,default=min(os.cpu_count() or 2,8))
     args = parser.parse_args()
     from metal_runtime import DEPENDENCIES
-    download_keys = (*DEPENDENCIES, 'dotnet', 'installer')
+    download_keys = (*DEPENDENCIES, 'dotnet', 'installer', 'x87_sidecar', 'metal_renderer_source', 'rustup_init')
     global GUI
     GUI = args.gui
     if GUI and os.getpgrp() != os.getpid():
         os.setsid()  # Setup owns this process group; cancellation never targets other apps.
     if args.plan:
-        print('1. Check Apple Silicon, Command Line Tools and Rosetta.\n2. Confirm downloads; verify pinned hashes.\n3. Build Bison and the CrossOver 26.3 synchronization backport.\n4. Install pinned Highball Wine and mtld3d Metal; disable Wine audio output in a new prefix.\n5. Prepare .NET and official installer; test synchronization, Metal and disabled audio.\n6. Confirm and open the official installer; finish its prompts yourself.\n7. Build relay/icons and activate the local configuration.\n8. Install the game and sign in using the official launcher.')
+        print('1. Check Apple Silicon, Command Line Tools and Rosetta.\n2. Confirm downloads; verify pinned hashes.\n3. Build Bison and the CrossOver 26.3 synchronization backport.\n4. Install pinned Highball Wine and mtld3d Metal; build the corrected Metal shaders with a private Rust toolchain and enable x87 audio.\n5. Prepare .NET and official installer; test synchronization, Metal and an active audio output.\n6. Confirm and open the official installer; finish its prompts yourself.\n7. Build relay/icons and activate the local configuration.\n8. Install the game and sign in using the official launcher.')
         for key in download_keys: print(key + ': ' + MANIFEST[key]['url'])
         return
     if args.jobs < 1: parser.error('--jobs must be positive')
@@ -324,18 +324,31 @@ def main():
     work = args.work_dir.expanduser().resolve()
     if work == ROOT or ROOT.is_relative_to(work): raise RuntimeError('Choose a dedicated work directory, not the source directory or its parent.')
     if work.exists() and any(work.iterdir()) and not (work / MARKER).is_file(): raise RuntimeError('Refusing a nonempty, unowned work directory: ' + str(work))
-    confirm('Download and prepare the runtime? Setup needs several GB; the game needs about 41 GB separately. New installs use Metal with sound disabled. Reconnect remains unresolved. Your existing installation will be kept.' if GUI else 'Prepare an isolated Wine installation at ' + str(work) + '? Downloads total about 1 GB; builds require several GB. Game download (~41 GB) is separate. Metal rendering and disabled audio are the defaults. Reconnect remains unresolved. No account data is requested by this script.')
+    confirm('Download and prepare the runtime? Setup needs several GB; the game needs about 41 GB separately. Setup builds the corrected Metal renderer and enables x87 audio. Reconnect remains unresolved. Your existing installation will be kept.' if GUI else 'Prepare an isolated Wine installation at ' + str(work) + '? The Rust toolchain, renderer sources and Wine dependencies require several GB. Game download (~41 GB) is separate. Corrected Metal materials and x87 audio are enabled by default. Reconnect remains unresolved. No account data is requested by this script.')
     work.mkdir(parents=True,exist_ok=True); (work / MARKER).write_text('Owned by Lineage macOS installer\n')
+    import fcntl
+    with (work / '.setup.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise RuntimeError('Setup is already running in this directory.')
+        prepare_installation(work, download_keys, args)
+
+
+def prepare_installation(work, download_keys, args):
     cache = work / 'cache'; cache.mkdir(exist_ok=True)
     stage('Downloading dependencies', 'Each download is checked against its pinned hash.')
     archives = {key: fetch(MANIFEST[key], cache) for key in download_keys}
     stage('Building the runtime', 'The first build takes several minutes. You can leave this window open.')
     import metal_runtime
     config = metal_runtime.prepare(work, archives, args.jobs, sys.modules[__name__])
+    stage('Preparing sound and materials', 'Building corrected Metal shaders and installing x87sidecar.')
+    config = metal_runtime.source_defaults(work, config, archives, sys.modules[__name__])
     (work / 'config.prepared.json').write_text(json.dumps(config,indent=2)+'\n'); (work / 'config.prepared.json').chmod(0o600)
     stage('Testing the runtime', 'Preparing an isolated Windows environment and checking the Wine patch.')
     bootstrap(work,config,archives)
-    metal_runtime.smoke_test(work, config, sys.modules[__name__])
+    import x87_audio
+    x87_audio.validate(config, work / 'x87-audio')
     print('Runtime build and smoke tests passed. Prepared config:',work / 'config.prepared.json')
     if args.prepare_only:
         event('complete', title='Preparation complete', detail='Runtime checks passed. Your active installation was not changed.', launch=False)

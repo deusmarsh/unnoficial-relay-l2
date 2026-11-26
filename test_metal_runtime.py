@@ -9,6 +9,8 @@ from unittest.mock import patch
 import dev
 import install
 import metal_runtime
+import material_fix
+import x87_audio
 from runtime_environment import wine_environment, METAL_PROFILE
 
 
@@ -55,6 +57,34 @@ class MetalRuntimeChecks(unittest.TestCase):
                 manifest['metal_renderer']['sha256'] = 'changed'
                 (root/'dependencies.json').write_text(json.dumps(manifest))
                 self.assertFalse(dev.runtime_matches(value))
+
+    def test_default_build_selects_both_fixes_and_verifies_cached_renderer(self):
+        with tempfile.TemporaryDirectory() as folder:
+            work = Path(folder).resolve()
+            config = dict(self.config(), wine=str(work/'stock/bin/wine'),
+                          wineserver=str(work/'stock/bin/wineserver'), runtime_identity='baseline')
+            archive = work / 'rustup-init'
+            archive.touch()
+            archives = dict(rustup_init=archive, x87_sidecar=work/'sidecar.tar',
+                            metal_renderer_source=work/'source.tar')
+            def install_copy(config, runtime, library):
+                dest = runtime/'lib/wine/x86_64-unix/mtld3d.so'
+                dest.parent.mkdir(parents=True)
+                dest.write_bytes(b'patched shader')
+                return dest
+            with patch.object(x87_audio, 'unpack_sidecar'), patch.object(x87_audio, 'verified_sidecar'), \
+                 patch.object(install, 'run'), patch.object(material_fix, 'build_library') as build, \
+                 patch.object(material_fix, 'install_library', side_effect=install_copy):
+                result = metal_runtime.source_defaults(work, config, archives, install)
+                self.assertEqual(result['prefix'], config['prefix'])
+                self.assertEqual(result['material_fix']['previous_runtime']['wine'], config['wine'])
+                self.assertIn('x87_audio', result)
+                self.assertEqual(metal_runtime.source_defaults(work, config, archives, install), result)
+                build.assert_called_once()
+                native = Path(result['wine']).parents[1]/'lib/wine/x86_64-unix/mtld3d.so'
+                native.write_bytes(b'unexpected renderer')
+                with self.assertRaisesRegex(RuntimeError, 'checksum mismatch'):
+                    metal_runtime.source_defaults(work, config, archives, install)
 
     def test_metal_preparation_refuses_legacy_prefix_before_any_change(self):
         with tempfile.TemporaryDirectory() as folder:

@@ -30,7 +30,7 @@ For an existing Metal source setup, close its launcher/game, then run
 `python3 x87_audio.py` and `./dev run`. The command checks pinned downloads,
 Rosetta compatibility, actual cooperative attachment, Metal and audio before
 activation. `python3 x87_audio.py --disable` restores the earlier audio-disabled
-mode. Fresh setup keeps its previous default until this explicit opt-in.
+mode. New source setups enable x87 audio automatically.
 
 ## Earlier video demos
 
@@ -65,13 +65,13 @@ Allow several GB for setup and roughly 41 GB for the game. Setup prompts for
 Apple's Command Line Tools and Rosetta if needed.
 
 1. Open **Develop.command** and choose **Set up / resume**, or run `./dev setup`.
-2. New source setups use Metal rendering with game/launcher sound disabled.
+2. Setup builds the corrected Metal renderer and enables x87 audio.
    Follow the setup wizard and complete the official publisher's installer.
 3. Choose **Run changed sources** or run `./dev run`. Sign in and download the
    game in the official launcher.
 
 Existing installations keep their configured runtime. To move to Metal, close the
-launcher/game and run `./dev setup`; the new default `.local-metal-v1` directory
+launcher/game and run `./dev setup`; the new default `.local-metal-audio-v2` directory
 keeps the old prefix and downloaded game intact. If that directory already contains
 an older recipe, choose a new `--work-dir`. Sign-in and game installation in the
 new prefix are still manual.
@@ -97,8 +97,7 @@ local official-client Metal trial was fixed by a downstream mtld3d shader patch.
 [Before/after screenshots and source-build instructions](docs/experiments/2026-11-21-material-fix/README.md).
 For an existing Metal source setup with the pinned Rust tools, close the
 launcher/game, run `python3 material_fix.py`, then `./dev run`. This builds into a
-separate runtime copy and preserves the current audio/x87 selection. New setup
-retains the stock renderer until explicit activation. Reconnect remains unresolved.
+separate runtime copy and preserves the current audio/x87 selection. New source setups apply the shader patch automatically. Reconnect remains unresolved.
 
 Status updated 21 November 2026. These are results from the maintainer’s existing
 installation, not a fresh-install or sustained-play guarantee. The GitHub checks
@@ -128,8 +127,8 @@ The official launcher and game run through Wine. The default launcher opens its 
 Wine window with native window controls, using the tested Chromium `in-process-gpu`
 configuration. It avoids capturing, encoding and displaying a stream of screenshots.
 Account login, downloads and Play remain in the official launcher. New source setups render the game
-in its own window through Direct3D 9 → mtld3d → Metal, with Wine audio output disabled.
-The optional `x87_audio.py` activation enables pinned x87sidecar and sound on an existing Metal source setup. Older configured installations retain their previous renderer and audio settings.
+in its own window through Direct3D 9 → mtld3d → Metal, with the corrected shaders and x87 audio enabled.
+If the game is silent, check the sound setting inside Lineage II. Older configured installations retain their previous renderer and audio settings.
 
 After closing the official launcher, `./dev run --relay` selects the previous screenshot
 display as a fallback. For a packaged app, use `open -a "Lineage II Launcher" --args --relay`.

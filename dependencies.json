@@ -82,5 +82,10 @@
     "sha256": "0de8c2de9156dae00e68b0f0bba27cdda7e1af6072f7740af8b764379e9ab9b6",
     "rust_stable": "1.99.0",
     "rust_nightly": "nightly-2026-10-11"
+  },
+  "rustup_init": {
+    "url": "https://static.rust-lang.org/rustup/archive/1.29.3/aarch64-apple-darwin/rustup-init",
+    "file": "rustup-init",
+    "sha256": "63752a1919a3a4793173ec70f8f212621a7ce38ba6a246095984482f4de20f9f"
   }
 }
