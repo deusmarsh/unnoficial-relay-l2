@@ -50,34 +50,8 @@ def clone_runtime(source, destination):
         shutil.copytree(source, destination, symlinks=True)
 
 
-def activate(path, work, archive, cargo_home=None, rustup_home=None, disable=False):
-    import dev
+def build_library(config, work, archive, cargo_home, rustup_home, *, test_tools=True):
     import install
-    import metal_runtime
-    from runtime_environment import METAL_PROFILE, wine_environment
-    from x87_audio import save, stopped
-    if path.is_symlink():
-        raise RuntimeError('Refusing a symlinked configuration.')
-    path = path.expanduser().resolve()
-    before = path.read_bytes()
-    config = json.loads(before)
-    if config.get('runtime_profile') != METAL_PROFILE:
-        raise RuntimeError('This fix requires an existing Metal source installation.')
-    stop_config = dict(config)
-    if disable:
-        stop_config.pop('material_fix', None)
-    stopped(stop_config)
-    if disable:
-        value = config.pop('material_fix', None)
-        if not value:
-            raise RuntimeError('No material-fix activation to undo.')
-        config.update(value['previous_runtime'])
-        save(path, before, config)
-        print('Previous runtime restored; the material-fix copy is retained.')
-        return
-    if config.get('material_fix'):
-        raise RuntimeError('A material fix is already active; --disable it before another build.')
-    dev.require_runtime(config)
     item = install.MANIFEST['metal_renderer_source']
     work = work.expanduser().resolve()
     if work.is_relative_to(Path(config['wine']).resolve().parent.parent):
@@ -113,6 +87,10 @@ def activate(path, work, archive, cargo_home=None, rustup_home=None, disable=Fal
          '--target', 'aarch64-apple-darwin'],
         ['cargo', stable, 'test', '--locked', '--manifest-path', 'unix/Cargo.toml'],
     ]
+    if not test_tools:
+        # Player setup needs the runtime libraries. The conformance runner's own
+        # tests sample other processes and belong to the maintainer workflow.
+        commands[-1].extend(['-p', 'mtld3d-unix', '-p', 'mtld3d-shared'])
     make = ['make', 'RUST_STABLE=' + item['rust_stable'], 'RUST_NIGHTLY=' + item['rust_nightly'],
             'WINE_SDK=' + str(Path(config['wine']).resolve().parent.parent), 'WINE_INSTALL_DIR=', 'PROD=1']
     commands += [make + ['unix-x64'], make + ['production-assert-gate',
@@ -131,13 +109,51 @@ def activate(path, work, archive, cargo_home=None, rustup_home=None, disable=Fal
     symbols = exports(native)
     if not symbols or symbols != exports(original):
         raise RuntimeError('Native renderer exports differ; configuration was not activated.')
-    runtime = work / 'runtime'
+    return native
+
+
+def install_library(config, runtime, native):
+    import install
     clone_runtime(Path(config['wine']).resolve().parent.parent, runtime)
     destination = runtime / 'lib/wine/x86_64-unix/mtld3d.so'
     if not destination.resolve().is_relative_to(runtime):
         raise RuntimeError('Renderer destination redirects outside runtime copy.')
     shutil.copy2(native, destination)
     install.run(['codesign', '--force', '--sign', '-', destination])
+    return destination
+
+
+def activate(path, work, archive, cargo_home=None, rustup_home=None, disable=False):
+    import dev
+    import install
+    from runtime_environment import METAL_PROFILE, wine_environment
+    from x87_audio import save, stopped
+    if path.is_symlink():
+        raise RuntimeError('Refusing a symlinked configuration.')
+    path = path.expanduser().resolve()
+    before = path.read_bytes()
+    config = json.loads(before)
+    if config.get('runtime_profile') != METAL_PROFILE:
+        raise RuntimeError('This fix requires an existing Metal source installation.')
+    stop_config = dict(config)
+    if disable:
+        stop_config.pop('material_fix', None)
+    stopped(stop_config)
+    if disable:
+        value = config.pop('material_fix', None)
+        if not value:
+            raise RuntimeError('No material-fix activation to undo.')
+        config.update(value['previous_runtime'])
+        save(path, before, config)
+        print('Previous runtime restored; the material-fix copy is retained.')
+        return
+    if config.get('material_fix'):
+        raise RuntimeError('A material fix is already active; --disable it before another build.')
+    dev.require_runtime(config)
+    work = work.expanduser().resolve()
+    native = build_library(config, work, archive, cargo_home, rustup_home)
+    runtime = work / 'runtime'
+    destination = install_library(config, runtime, native)
     result = candidate(config, runtime, destination)
     verify_renderer(result)
     # Real device/presentation probe on the new library; respect the current audio mode.

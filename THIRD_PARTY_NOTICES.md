@@ -69,9 +69,9 @@ retained in licenses/MTLD3D-LICENSE and in the downloaded renderer archive.
 Its source is https://github.com/athei/mtld3d . All three downloads are hash-pinned
 in dependencies.json. The older Sikarugir inputs remain for legacy standalone builds.
 
-## Optional x87sidecar
+## x87sidecar
 
-The explicit `x87_audio.py` opt-in downloads x87sidecar v1.9.1 from its official
+Source setup downloads x87sidecar v1.9.1 from its official
 release, with pinned archive and executable SHA-256. It is not embedded in this
 source archive. Upstream: https://github.com/athei/x87sidecar.
 MIT license; copyright (c) 2025 Lifeisawful. The upstream notice is retained in
@@ -82,5 +82,5 @@ Game artwork in screenshots and video excerpts belongs to its respective owners.
 
 `patches/mtld3d-zero-multiply.patch` is a plainly marked local alteration of
 mtld3d v0.15.5 by Alexander Theissen. The upstream zlib notice is retained in
-`licenses/MTLD3D-LICENSE`. The opt-in helper downloads verified upstream source
+`licenses/MTLD3D-LICENSE`. Source setup downloads verified upstream source
 and builds locally; no modified runtime or publisher binary is embedded here.

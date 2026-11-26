@@ -74,7 +74,7 @@ python3 material_fix.py --disable
 
 The original runtime remains intact. The patched runtime is retained for review.
 If rebuilding, use a new `--work-dir` rather than deleting a previous runtime.
-New setup retains the stock renderer until this command is run. This does not
+New source setups now include this correction by default. This does not
 change the legacy standalone/DMG builder or silently migrate another installation.
 
 ## Validation and scope

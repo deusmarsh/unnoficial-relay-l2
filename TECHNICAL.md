@@ -40,7 +40,7 @@ Requires Xcode Command Line Tools and Python 3. The optional WPF window helper n
 
 ## Runtime and rendering
 
-New source setups use the pinned Highball x86-64 Wine 11.0 engine, mtld3d v0.15.5, and a guarded-mutex module rebuilt from the pinned CrossOver 26.3.0 sources. Support libraries still come from the pinned Wine development package. `metal_runtime.py` builds the runtime and installs both 32-bit and 64-bit native d3d9 DLLs and mtld3d markers after wineboot. Per-game overrides select native d3d9 for L2.exe and L2.bin only. `runtime_environment.py` supplies the same environment during setup and launch: `winecoreaudio.drv=d`, `color.hdr.enable=false`, `shader.asyncCompile=false`, and the downloaded runtime framework path. Audio is disabled only inside this configured Wine environment. The official WPF installer is extracted and prepared with Microsoft .NET Core 3.1.32 while preserving its WindowsDesktop assemblies. This is a legacy, experimental runtime combination.
+New source setups use the pinned Highball x86-64 Wine 11.0 engine, mtld3d v0.15.5, and a guarded-mutex module rebuilt from the pinned CrossOver 26.3.0 sources. Support libraries still come from the pinned Wine development package. `metal_runtime.py` builds the runtime and installs both 32-bit and 64-bit native d3d9 DLLs and mtld3d markers after wineboot. Per-game overrides select native d3d9 for L2.exe and L2.bin only. The installer builds the corrected native mtld3d library in a separate runtime and validates it with x87sidecar. The launcher inherits `ROSETTA_X87_PATH`, the Metal framework path and the configured shader options. Existing installations without `x87_audio` retain the earlier audio-disabled mode. The official WPF installer is extracted and prepared with Microsoft .NET Core 3.1.32 while preserving its WindowsDesktop assemblies. This is a legacy, experimental runtime combination.
 
 The default display is the official launcher's direct Wine window. Its Chromium
 switches disable GPU rendering/compositing and accelerated video decode, fix scale
@@ -60,7 +60,7 @@ restarts its updater or game. Concurrent startup requests are serialized.
 
 The game renders separately through Direct3D 9 → mtld3d → Metal in new setups.
 The existing Sikarugir/OpenGL configuration and the older packaged preview are
-preserved for existing users. Reconnects and material defects remain. No FPS
+preserved for existing users. Reconnects remain under investigation. No FPS
 speedup ratio or sustained-play guarantee is inferred from the recorded sessions.
 
 After closing the official launcher, `./dev run --relay` selects the legacy native

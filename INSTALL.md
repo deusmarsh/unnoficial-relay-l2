@@ -4,9 +4,8 @@
 
 Follow the [quick start](README.md#quick-start) to set up and launch the alpha.
 Setup downloads pinned dependencies, builds the Wine patches, and creates an
-isolated Metal/audio-disabled environment in `.local-metal-v1/`.
-Requires Apple Silicon, macOS 15.4+, developer tools and Rosetta. Downloads are
-approximately 1 GB before extraction; builds need several GB, plus the game. It writes `config.local.json` automatically.
+isolated Metal environment with x87 audio in `.local-metal-audio-v2/`.
+Requires Apple Silicon, macOS 15.4+, developer tools and Rosetta. Setup downloads a private Rust toolchain and builds the patched renderer. Allow several GB for the build, plus the game. It writes `config.local.json` automatically.
 The wizard continues in its own window after the command returns. Finish the
 publisher's installer and return to the wizard to activate the environment.
 
@@ -14,15 +13,12 @@ Repeating setup reuses completed preparation. For a preparation run that stops
 before the official installer and activation, use `./dev setup --prepare-only`.
 See [Contributing](CONTRIBUTING.md) for rebuilding after changes to Wine patches.
 
-## Metal and disabled audio
+## Metal materials and audio
 
-`./dev setup` now installs the pinned Highball x86-64 Wine 11.0 engine, mtld3d
-v0.15.5 and the locally rebuilt guarded-mutex module from CrossOver 26.3.0 sources.
-Before activation it checks mutex behavior, creates a 32-bit Metal D3D9 device,
-and verifies that the prefix has zero active audio playback endpoints.
-`./dev run` passes the same renderer settings and `winecoreaudio.drv=d` to the
-official launcher, which passes them to the game. No macOS audio setting changes.
-Sound is intentionally unavailable in this profile. Reconnect remains unresolved.
+Source setup applies the mtld3d shader correction and enables x87sidecar v1.9.1.
+The installer keeps the pinned Rust tools in the selected work directory. Before
+activation it checks cooperative x87 attachment, a real 32-bit Metal presentation
+and an active audio output. If playback is silent, enable sound in the game settings.
 
 Existing local configurations are not rewritten by `./dev run`. Close the launcher
 and game, then run `./dev setup` for the new default directory, or
@@ -101,7 +97,7 @@ native UI text. Sustained play remains unverified. A separate source-based clean
 
 See the [alpha status](README.md#alpha-status) for the current gameplay baseline.
 
-## Optional x87 acceleration and sound
+## Enable sound in an older Metal installation
 
 After completing the existing Metal source setup, close its launcher and game:
 
@@ -117,13 +113,12 @@ Configuration backups are under `.build/x87-audio-backups/`. For an offline
 verified cache, pass `--archive /path/to/x87sidecar.tar.xz`.
 
 To restore the earlier Metal/audio-disabled mode, close the launcher/game and
-run `python3 x87_audio.py --disable`. Existing configurations and fresh setup
-remain unchanged until explicit activation. The legacy standalone/DMG builder
+run `python3 x87_audio.py --disable`. New setups already enable sound. The legacy standalone/DMG builder
 is not covered. The command verifies hardware/runtime setup, not a fresh game
 installation or sustained gameplay; Reconnect still recurs in official-client
 trials. [Evidence and limits](docs/experiments/2026-11-21-x87-audio/README.md).
 
-## Optional corrected Metal character materials
+## Upgrade materials in an older Metal installation
 
 The downstream material patch has a separate source-build command:
 `python3 material_fix.py`, followed by `./dev run`, after closing the configured
@@ -131,6 +126,4 @@ launcher/game. It needs pinned Rust 1.99.0, the x86_64-apple-darwin target and
 llvm-tools-preview; see the [complete instructions and before/after evidence](docs/experiments/2026-11-21-material-fix/README.md).
 It validates the source archive, runs renderer tests and builds into a separate
 runtime. Audio/x87 selection and the game prefix are preserved. Use
-`python3 material_fix.py --disable` to restore the previous runtime. This is an
-explicit source opt-in; fresh setup's stock renderer and the legacy standalone
-builder are unchanged. Reconnect is unresolved.
+`python3 material_fix.py --disable` to restore the previous runtime. New source installations already use this correction. Reconnect is unresolved.
